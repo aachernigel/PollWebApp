@@ -1,0 +1,298 @@
+#homePage {
+    background-image: url("../images/street.gif");
+}
+
+#functionsPage {
+    background-image: url("../images/field.gif");
+}
+
+#createPollBody, #numberOfOptionsBody, #updatePollBody {
+    background-image: url("../images/street2.gif");
+}
+
+#resultsBody{
+    background-image: url("../images/mountain.gif");
+}
+
+.functionsMenu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 7%;
+}
+
+#homeButton {
+    background-color: darkslateblue;
+}
+
+#homeButton:hover {
+    background-color: #3b1a5b;
+    border-color: #888584;
+}
+
+#createPollButton {
+    background-color: darkcyan;
+}
+
+#createPollButton:hover {
+    background-color: #266e69;
+    border-color: #888584;
+}
+
+#updatePollButton {
+    background-color: darkmagenta;
+}
+
+#updatePollButton:hover {
+    background-color: #6b215b;
+}
+
+#clearPollButton {
+    background-color: darkkhaki;
+}
+
+#clearPollButton:hover {
+    background-color: #83844b;
+}
+
+#closePollButton {
+    background-color: #343077;
+}
+
+#closePollButton:hover {
+    background-color: #061a3d;
+}
+
+#runPollButton {
+    background-color: cornflowerblue;
+}
+
+#runPollButton:hover {
+    background-color: #4a77b6;
+}
+
+#releasePollButton {
+    background-color: chocolate;
+}
+
+#releasePollButton:hover {
+    background-color: #9e5620;
+}
+
+#unreleasePollButton {
+    background-color: thistle;
+}
+
+#unreleasePollButton:hover {
+    background-color: #c49fc2;
+}
+
+select {
+    font-size: 24px;
+    border: 1px solid #969796;
+    padding: 2.5% 3.3%;
+    width: 200px;
+    text-align: center;
+    transition-duration: 0.2s;
+}
+
+select:hover {
+    cursor: pointer;
+    background-color: #e7e8e7;
+}
+
+.pollMessage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    height: 450px;
+    text-align: center;
+}
+
+.innerDiv {
+    box-shadow: 4px 3px 8px 1px #969696;
+    background-color: lightgray;
+    opacity: 0.8;
+    border-radius: 5px;
+    width: 400px;
+    padding: 3%;
+}
+
+#createPollDiv {
+    padding-top: 100px;
+}
+
+#updatePollDiv{
+    padding-top: 150px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#resultsDiv {
+    padding-top: 150px;
+}
+
+#resultsInnerDiv {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    width: auto;
+    opacity: 0.92;
+}
+
+#piechart_3d {
+    width: 900px;
+    height: 500px;
+}
+
+#updatePollInnerDiv{
+    margin-top: 5px;
+    margin-left: 5px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    width: 500px;
+}
+
+#createPollInnerDiv {
+    width: 500px;
+}
+
+#secondInnerDiv {
+    padding-top: 25px;
+    padding-bottom: 25px;
+    text-align: left;
+}
+
+label {
+    padding-left: 15px;
+}
+
+.loginDiv {
+    display: flex;
+    justify-content: right;
+    align-items: end;
+    right: 0px;
+    padding: 10px;
+}
+
+input[type=text], input[type=password] {
+    border-width: 2px;
+    border-radius: 6px;
+    border-style: solid;
+    outline: none;
+    width: 170px;
+    padding: 12px 12px;
+    margin: 8px 0;
+    transition-duration: 0.4s;
+}
+
+input[type=text]:focus, input[type=password]:focus{
+    border-color: cornflowerblue;
+    border-width: 2px;
+}
+
+input[type=radio] {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+}
+
+.spanRadio {
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-gap: 0.5em;
+}
+
+.spanControl {
+    display: block;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    border: 0.1em solid currentColor;
+    transition: ease-in-out 0.3s;
+}
+
+.spanControl:hover {
+    cursor: pointer;
+}
+
+input[type=radio]:checked + .spanControl {
+    background: radial-gradient(#2f5f20 25%, rgba(255, 0, 0, 0) 26%);
+    padding: 2px;
+    box-shadow: inset 0.05em 0.3em #499331;
+    border-width: 4px;
+}
+
+.spanInput {
+    display: flex;
+    padding: 10px;
+}
+
+#submitHome {
+    margin-top: 25px;
+}
+
+.functionButton {
+    border-radius: 0;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #bbc3bc;
+    background-color: darkblue;
+    color: white;
+    font-size: 36px;
+    padding: 36px 36px;
+    margin: 5px;
+    width: 400px;
+    height: 120px;
+}
+
+input[type=button], button {
+    border-radius: 6px;
+    border: none;
+    background-color: slateblue;
+    color: aliceblue;
+    font-size: 18px;
+    font-weight: lighter;
+    transition-duration: 0.2s;
+    padding: 12px 20px;
+    width: 200px;
+}
+
+input[type=button]:disabled, button:disabled,
+#createPollButton:disabled, #updatePollButton:disabled, #clearPollButton:disabled, #closePollButton:disabled,
+#runPollButton:disabled, #releasePollButton:disabled, #unreleasePollButton:disabled {
+    background-color: #969696;
+    color: darkgray;
+    cursor: not-allowed;
+}
+
+input[type=button]:disabled:hover, button:disabled:hover {
+    background-color: #969696;
+    color: darkgray;
+    cursor: not-allowed;
+}
+
+input[type=button]:hover, button:hover {
+    background-color: darkslateblue;
+    cursor: pointer;
+}
+
+p {
+    font-size: 24px;
+    padding: 12px 12px;
+}
+
+.divUpdate {
+    display: none;
+}
+
+body {
+    font-family: Tahoma;
+}
+
+#passwordLabel {
+    color: lightgray;
+    font-weight: bold;
+    font-size: 18px;
+}

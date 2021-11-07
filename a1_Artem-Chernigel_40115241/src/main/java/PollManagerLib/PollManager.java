@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Hashtable;
 
 public class PollManager {
+    private static int ID_LENGTH = 10;
+    private String pollID;
     private String name;
     private String question;
     private Choice[] choices;
@@ -44,6 +46,14 @@ public class PollManager {
         return date.format(formatter);
     }
 
+    public String getPollID(){
+        return this.pollID;
+    }
+
+    public void setPollID(String pollID){
+        this.pollID = pollID;
+    }
+
     private void setValues(String name, String question, Choice[] choices) throws PollException {
         if (name.equals("")) {
             throw new PollException("setValues", "Name of the Poll cannot be empty");
@@ -69,9 +79,20 @@ public class PollManager {
         }
     }
 
+    private void generateID(){
+        String alphabet = "ABCDEFGHJKMNPQRSTVWXYZ";
+        int randomIndex;
+        this.pollID = "";
+        for(int i = 0; i < PollManager.ID_LENGTH; i++){
+            randomIndex = (int) (Math.random() * alphabet.length());
+            this.pollID += alphabet.charAt(randomIndex);
+        }
+    }
+
     public void CreatePoll(String name, String question, Choice[] choices) throws PollException {
         if (this.status == null || this.status == PollStatus.RELEASED) {
             this.status = PollStatus.CREATED;
+            this.generateID();
             this.choiceTable = new Hashtable<>();
             try {
                 setValues(name, question, choices);

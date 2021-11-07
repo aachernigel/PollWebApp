@@ -14,7 +14,7 @@
     } catch (PollException pe) {
         System.err.println(pe);
     }
-    response.sendRedirect("index.jsp");
+    response.sendRedirect("home.jsp");
 %>
 </body>
 </html>

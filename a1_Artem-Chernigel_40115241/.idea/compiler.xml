@@ -7,9 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="PollWebApp" />
+        <module name="a1_Artem-Chernigel_40115241" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="a1_Artem-Chernigel_40115241" target="1.8" />
       <module name="PollWebApp" target="1.8" />
     </bytecodeTargetLevel>
   </component>

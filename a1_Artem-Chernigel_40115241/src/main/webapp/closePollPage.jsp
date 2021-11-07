@@ -15,7 +15,7 @@
         System.err.println(pe);
     }
     PollWrapper.manager.setStatus(null);
-    response.sendRedirect("index.jsp");
+    response.sendRedirect("home.jsp");
 %>
 </body>
 </html>

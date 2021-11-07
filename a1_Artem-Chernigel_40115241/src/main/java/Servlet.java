@@ -6,19 +6,21 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.*;
+import java.sql.*;
 
 @WebServlet(name = "Servlet", value = "/Servlet")
 public class Servlet extends HttpServlet {
     private final String FORMAT = "text";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getParameter("pollNameDownload") != null && request.getParameter("pollFormatDownload") != null) {
-            if(!request.getParameter("pollNameDownload").equals(PollWrapper.manager.getName())){
+            if (!request.getParameter("pollNameDownload").equals(PollWrapper.manager.getName())) {
                 System.err.println("ERROR: Poll name does not match in doGet");
-                response.sendRedirect("index.jsp");
-            } else if(!request.getParameter("pollFormatDownload").equals(FORMAT)){
+                response.sendRedirect("home.jsp");
+            } else if (!request.getParameter("pollFormatDownload").equals(FORMAT)) {
                 System.err.println("ERROR: Download format does not match in doGet");
-                response.sendRedirect("index.jsp");
+                response.sendRedirect("home.jsp");
             } else {
                 String filename = PollWrapper.manager.getName() + "-" + PollWrapper.manager.getTime() + ".txt";
                 ServletOutputStream out = response.getOutputStream();
@@ -56,20 +58,42 @@ public class Servlet extends HttpServlet {
                 System.out.println("Name of the Poll: " + request.getParameter("pollNameCreation"));
                 System.out.println("Question of the Poll: " + request.getParameter("pollQuestionCreation"));
                 Choice[] arr = new Choice[Integer.parseInt(request.getParameter("options"))];
+                String choicesStr = "";
+                String columnsStr = "";
                 for (int i = 1; i <= Integer.parseInt(request.getParameter("options")); i++) {
                     System.out.println("Choice " + i + " of the Poll: " + request.getParameter("choice" + i + "Creation"));
                     arr[i - 1] = new Choice(request.getParameter("choice" + i + "Creation"));
+                    choicesStr += "\"" + request.getParameter("choice" + i + "Creation") + "\"";
+                    columnsStr += "option" + i;
+                    if (i != Integer.parseInt(request.getParameter("options"))) {
+                        choicesStr += ", ";
+                        columnsStr += ", ";
+                    }
                 }
                 try {
                     PollWrapper.manager.CreatePoll(
                             request.getParameter("pollNameCreation"), request.getParameter("pollQuestionCreation"),
                             arr
                     );
+                    DBConnection.getConnection();
+                    try {
+                        Statement statement = DBConnection.conn.createStatement();
+                        statement.executeUpdate(
+                                "INSERT INTO poll(pollID, name, question, " + columnsStr + ") VALUES (" +
+                                        "\"" + PollWrapper.manager.getPollID() + "\"" +
+                                        ", \"" + PollWrapper.manager.getName() + "\"" +
+                                        ", \"" + PollWrapper.manager.getQuestion() + "\"" +
+                                        ", " + choicesStr +
+                                        ")");
+                        DBConnection.closeConnection();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 } catch (PollException pe) {
                     System.err.println(pe);
                 }
                 System.out.println(PollWrapper.manager.getStatus());
-                response.sendRedirect("index.jsp");
+                response.sendRedirect("home.jsp");
             }
             if (request.getParameter("doNotChangeValuesUpdate") != null) {
                 System.out.println("--- UPDATING THE POLL ---");
@@ -83,7 +107,7 @@ public class Servlet extends HttpServlet {
                 } catch (PollException pe) {
                     System.err.println(pe);
                 }
-                response.sendRedirect("index.jsp");
+                response.sendRedirect("home.jsp");
             } else {
                 boolean verifiedUpdate = true;
                 if (request.getParameter("pollNameUpdate") == null || request.getParameter("pollQuestionUpdate") == null)
@@ -113,7 +137,7 @@ public class Servlet extends HttpServlet {
                     } catch (PollException pe) {
                         System.err.println(pe);
                     }
-                    response.sendRedirect("index.jsp");
+                    response.sendRedirect("home.jsp");
                 }
             }
         }
@@ -135,7 +159,7 @@ public class Servlet extends HttpServlet {
                     break;
                 }
             }
-            response.sendRedirect("index.jsp");
+            response.sendRedirect("home.jsp");
         }
     }
 }

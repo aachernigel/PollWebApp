@@ -58,7 +58,7 @@
     <table>
         <tr>
             <td>
-                <button onclick="window.location.href='index.jsp';" id="homeButton" class="functionButton">
+                <button onclick="window.location.href='home.jsp';" id="homeButton" class="functionButton">
                     Home
                 </button>
             </td>

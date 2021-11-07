@@ -1,0 +1,15 @@
+CREATE TABLE `polldb`.`poll` (
+  `pollID` VARCHAR(10) NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `question` VARCHAR(45) NOT NULL,
+  `option1` VARCHAR(45) NOT NULL,
+  `option2` VARCHAR(45) NOT NULL,
+  `option3` VARCHAR(45) NULL,
+  `option4` VARCHAR(45) NULL,
+  `option5` VARCHAR(45) NULL,
+  `option6` VARCHAR(45) NULL,
+  `option7` VARCHAR(45) NULL,
+  `option8` VARCHAR(45) NULL,
+  `option9` VARCHAR(45) NULL,
+  `option10` VARCHAR(45) NULL,
+  PRIMARY KEY (`pollID`));

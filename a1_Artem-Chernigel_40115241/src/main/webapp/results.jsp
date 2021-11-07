@@ -55,7 +55,7 @@
 <body id="resultsBody">
 <div class="pollMessage" id="resultsDiv">
     <div class="innerDiv" id="resultsInnerDiv">
-        <button onclick="window.location.href='index.jsp'">Home</button>
+        <button onclick="window.location.href='home.jsp'">Home</button>
         <div id="piechart_3d"></div>
         <p id="resultsMessage"></p>
     </div>

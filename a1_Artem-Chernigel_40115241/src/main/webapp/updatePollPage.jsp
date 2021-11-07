@@ -24,7 +24,7 @@
 <%int numOfOptions = PollWrapper.manager.getChoices().length;%>
 <div class="pollMessage" id="updatePollDiv">
     <div class="innerDiv" id="updatePollInnerDiv">
-        <button onclick="window.location.href='index.jsp'">Home</button>
+        <button onclick="window.location.href='home.jsp'">Home</button>
         <p>Would you like to update the poll fields as well?</p>
         <label class="spanRadio">
     <span class="spanInput">

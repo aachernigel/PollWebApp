@@ -13,7 +13,7 @@
 
 <div class="pollMessage" id="createPollDiv">
     <div class="innerDiv" id="createPollInnerDiv">
-        <button onclick="window.location.href='index.jsp'">Home</button>
+        <button onclick="window.location.href='home.jsp'">Home</button>
         <form action="Servlet" method="get">
             <div id="secondInnerDiv">
                 <input type="text" value="" id="pollNameCreation" name="pollNameCreation" required="true">

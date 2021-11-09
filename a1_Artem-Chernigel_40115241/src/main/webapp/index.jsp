@@ -24,5 +24,8 @@
     PIN#:
 </label></br>
 <input type="text" name="pinInput" id="pinInput">
+<button type="submit" name="requestPIN#" id="requestPIN#">
+    Request PIN#
+</button>
 </body>
 </html>

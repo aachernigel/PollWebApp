@@ -19,10 +19,5 @@
     </br>
     <button type="submit">Search</button>
 </form>
-</br>
-<label for="pinInput">
-    PIN#:
-</label></br>
-<input type="text" name="pinInput" id="pinInput">
 </body>
 </html>

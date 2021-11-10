@@ -146,12 +146,51 @@ public class Servlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getParameter("choice") != null) {
-            request.getSession().setMaxInactiveInterval(60 * 60 * 24 * 365);
             System.out.println(" The choice selected was: " + request.getParameter("choice"));
             for (int i = 0; i < PollWrapper.manager.getChoices().length; i++) {
                 System.out.println(PollWrapper.manager.getChoices()[i].getDescription());
                 if (request.getParameter("choice").equals(PollWrapper.manager.getChoices()[i].getDescription())) {
                     try {
+                        DBConnection.getConnection();
+                        try {
+                            Statement statement = DBConnection.conn.createStatement();
+                            ResultSet resultSet = statement.executeQuery("SELECT * FROM vote WHERE " +
+                                    "sessionID = " + "\"" + request.getSession().getId() + "\"" +
+                                    "AND pollID = " + "\"" + PollWrapper.manager.getPollID() + "\""
+                            );
+                            if (!resultSet.first()) {
+                                System.out.println("Generating a PIN for this Poll...");
+                                PollWrapper.manager.generatePIN();
+                                PreparedStatement preparedStatement = DBConnection.conn.prepareStatement(
+                                        "INSERT INTO vote (pollID, sessionID, pin, choice) VALUES (?,?,?,?)"
+                                );
+                                preparedStatement.setString(1, PollWrapper.manager.getPollID());
+                                preparedStatement.setString(2, request.getSession().getId());
+                                preparedStatement.setString(3, PollWrapper.manager.getPIN());
+                                preparedStatement.setString(4, PollWrapper.manager.getChoices()[i].getDescription());
+                                preparedStatement.executeUpdate();
+                                DBConnection.closeConnection();
+                            } else if(resultSet.first()){
+                                DBConnection.getConnection();
+                                PreparedStatement preparedStatement = DBConnection.conn.prepareStatement(
+                                        "UPDATE vote SET choice = ? WHERE pollID = ? AND pin = ?"
+                                );
+                                preparedStatement.setString(1, PollWrapper.manager.getChoices()[i].getDescription());
+                                preparedStatement.setString(2, PollWrapper.manager.getPollID());
+                                preparedStatement.setString(3, PollWrapper.manager.getPIN());
+                                preparedStatement.executeUpdate();
+                                DBConnection.closeConnection();
+                                if(request.getParameter("pinInputVote").equals("")){
+                                    System.out.println("We used your generated PIN from before to process the vote!");
+                                } else if(!request.getParameter("pinInputVote").equals(resultSet.first())){
+                                    // can the user enter different PINS within the same session?
+                                    System.out.println("The PIN was not equal to the one from your session!\n" +
+                                            "We used the generated one from before to process the vote.");
+                                }
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
                         PollWrapper.manager.Vote(request.getSession().getId(), PollWrapper.manager.getChoices()[i]);
                     } catch (PollException pe) {
                         System.err.println(pe);

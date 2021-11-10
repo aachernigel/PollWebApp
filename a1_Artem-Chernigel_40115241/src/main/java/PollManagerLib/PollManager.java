@@ -7,7 +7,9 @@ import java.util.Hashtable;
 
 public class PollManager {
     private static int ID_LENGTH = 10;
+    private static int PIN_LENGTH = 6;
     private String pollID;
+    private String pin;
     private String name;
     private String question;
     private Choice[] choices;
@@ -54,6 +56,14 @@ public class PollManager {
         this.pollID = pollID;
     }
 
+    public String getPIN(){
+        return this.pin;
+    }
+
+    public void setPIN(String pin){
+        this.pin = pin;
+    }
+
     private void setValues(String name, String question, Choice[] choices) throws PollException {
         if (name.equals("")) {
             throw new PollException("setValues", "Name of the Poll cannot be empty");
@@ -80,6 +90,7 @@ public class PollManager {
     }
 
     private void generateID(){
+        // Can we assume that I can use database to check the ID against it?
         String alphabet = "ABCDEFGHJKMNPQRSTVWXYZ";
         int randomIndex;
         this.pollID = "";
@@ -89,8 +100,17 @@ public class PollManager {
         }
     }
 
+    public void generatePIN(){
+        String pin = "";
+        for(int i = 0; i < PollManager.PIN_LENGTH; i++)
+            pin += (int) (Math.random() * PollManager.ID_LENGTH);
+        this.pin = pin;
+    }
+
     public void CreatePoll(String name, String question, Choice[] choices) throws PollException {
         if (this.status == null || this.status == PollStatus.RELEASED) {
+            // change of the status would be better made in PollManager because all of the checks are made here
+            // but can we use DBConnection in poll manager or it is solely for the JSP part?
             this.status = PollStatus.CREATED;
             this.generateID();
             this.choiceTable = new Hashtable<>();

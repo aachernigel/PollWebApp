@@ -2,6 +2,7 @@ CREATE TABLE `polldb`.`poll` (
   `pollID` VARCHAR(10) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `question` VARCHAR(45) NOT NULL,
+  `status` VARCHAR (45) NULL, 
   `option1` VARCHAR(45) NOT NULL,
   `option2` VARCHAR(45) NOT NULL,
   `option3` VARCHAR(45) NULL,

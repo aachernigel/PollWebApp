@@ -12,7 +12,16 @@
     <%@ include file="login.jsp" %>
 </head>
 <body id="homePage">
-
+<form action="SearchServlet" method="get">
+    </br>
+    <label for="pinInput">
+        PIN#:
+    </label></br>
+    <input type="text" name="pinInput" id="pinInput" value="<%=PollWrapper.manager.getPIN() == null ? "" : PollWrapper.manager.getPIN()%>">
+    <button type="submit" name="requestPIN#" id="requestPIN#">
+        Request PIN#
+    </button>
+</form>
 <%
     if (PollWrapper.manager.getStatus() == null) {
 %>
@@ -49,6 +58,10 @@
             <button type="submit" id="submitHome">
                 Vote
             </button>
+            <label for="pinInputVote">
+                PIN# (Optional):
+            </label></br>
+            <input type="text" name="pinInputVote" id="pinInputVote">
         </form>
         <script>
             console.log("<%=numOfOptions%>")

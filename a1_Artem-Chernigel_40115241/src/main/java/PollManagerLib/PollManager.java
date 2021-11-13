@@ -1,9 +1,13 @@
 package PollManagerLib;
 
 import java.io.PrintWriter;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Hashtable;
+import web.DBConnection;
+import web.DBPollGateway;
 
 public class PollManager {
     private static int ID_LENGTH = 10;
@@ -110,7 +114,7 @@ public class PollManager {
     public void CreatePoll(String name, String question, Choice[] choices) throws PollException {
         if (this.status == null || this.status == PollStatus.RELEASED) {
             // change of the status would be better made in PollManager because all of the checks are made here
-            // but can we use DBConnection in poll manager or it is solely for the JSP part?
+            // but can we use web.DBConnection in poll manager or it is solely for the JSP part?
             this.status = PollStatus.CREATED;
             this.generateID();
             this.choiceTable = new Hashtable<>();
@@ -135,6 +139,7 @@ public class PollManager {
             }
             ClearPoll();
             this.status = PollStatus.CREATED;
+            DBPollGateway.dbPoll.updateStatus(PollWrapper.manager.getStatus());
         } else {
             throw new PollException("Update", "Status is not CREATED or RUNNING");
         }
@@ -151,6 +156,7 @@ public class PollManager {
             }
             if (this.status == PollStatus.RELEASED)
                 this.status = PollStatus.CREATED;
+            DBPollGateway.dbPoll.updateStatus(PollWrapper.manager.getStatus());
         } else {
             throw new PollException("Clear", "Status is not RUNNING or RELEASED");
         }
@@ -175,6 +181,7 @@ public class PollManager {
         if (this.status == PollStatus.CREATED) {
             this.status = PollStatus.RUNNING;
             System.out.println("Poll status is now RUNNING");
+            DBPollGateway.dbPoll.updateStatus(PollWrapper.manager.getStatus());
         } else {
             throw new PollException("Run", "Status is not CREATED");
         }
@@ -184,6 +191,7 @@ public class PollManager {
         if (this.status == PollStatus.RUNNING) {
             this.status = PollStatus.RELEASED;
             System.out.println("Poll status is now RELEASED");
+            DBPollGateway.dbPoll.updateStatus(PollWrapper.manager.getStatus());
         } else {
             throw new PollException("Release", "Status is not RUNNING");
         }
@@ -193,6 +201,7 @@ public class PollManager {
         if (this.status == PollStatus.RELEASED) {
             this.status = PollStatus.RUNNING;
             System.out.println("Poll status is now UNRELEASED");
+            DBPollGateway.dbPoll.updateStatus(PollWrapper.manager.getStatus());
         } else {
             throw new PollException("Unrelease", "Status is not RELEASED");
         }

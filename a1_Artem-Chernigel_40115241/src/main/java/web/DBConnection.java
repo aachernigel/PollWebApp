@@ -1,3 +1,5 @@
+package web;
+
 import java.sql.*;
 
 public class DBConnection {
@@ -6,7 +8,7 @@ public class DBConnection {
     static final String DB_NAME ="polldb?useSSL=false";
     static final String DB_USER = "root";
     static final String DB_PASSWORD = "obobyandex0919";
-    static Connection conn = null;
+    public static Connection conn = null;
 
     public static Connection getConnection(){
         try{

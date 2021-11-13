@@ -8,26 +8,31 @@
 </head>
 <body>
 <script type="text/javascript">
-    let attempts = 3;
 
-    function checkPassword() {
-        if (attempts <= 1) {
-            document.getElementById("submit").disabled = true;
-            alert("You have no attempts left, sorry!");
-        // } else if (document.getElementById("password").value === "secretPassword123" && attempts > 0) {
-        } else if (document.getElementById("password").value === "123" && attempts > 0) {
-            window.location.href = "adminMenu.jsp";
-        } else {
-            attempts--;
-            alert("You have " + attempts + " attempts left!");
-        }
+    // check if request attribute "attempts" is less than or equal to three
+    // deny log in if greater than three (disable the button)
+    function checkInput() {
+
     }
+
 </script>
 <div class="loginDiv">
-    <form method="post">
-        <label for="password" id="passwordLabel">Password:</label><br/>
-        <input type="password" id="password" name="password"><br/>
-        <input type="button" id="submit" onclick="checkPassword()" value="Log In">
+    <form method="post" action="LogInServlet">
+        <label for="userIDLogIn" id="userIDLogInLabel">User ID:</label><br/>
+        <input type="text" id="userIDLogIn" name="userIDLogIn"><br/>
+        <label for="passwordLogIn" id="passwordLogInLabel">Password:</label><br/>
+        <input type="password" id="passwordLogIn" name="passwordLogIn"><br/>
+        <button type="submit" id="submitLogIn" onclick="checkInput()">
+            Log In
+        </button>
+        <p name="errorLogIn" id="errorLogIn">
+            <%=request.getAttribute("error") == null ? "" : request.getAttribute("error")%>
+        </p>
+    </form>
+    <form method="post" action="RegisterServlet">
+        <button type="submit" id="register" onclick="alert('The feature is not implemented yet!')">
+            Register
+        </button>
     </form>
 </div>
 </body>

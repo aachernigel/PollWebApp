@@ -291,7 +291,7 @@ body {
     font-family: Tahoma;
 }
 
-#passwordLabel {
+#passwordLogInLabel, #userIDLogInLabel {
     color: lightgray;
     font-weight: bold;
     font-size: 18px;

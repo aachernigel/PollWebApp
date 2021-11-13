@@ -1,3 +1,5 @@
+package web;
+
 import PollManagerLib.Choice;
 import PollManagerLib.PollException;
 import PollManagerLib.PollWrapper;
@@ -79,10 +81,11 @@ public class Servlet extends HttpServlet {
                     try {
                         Statement statement = DBConnection.conn.createStatement();
                         statement.executeUpdate(
-                                "INSERT INTO poll(pollID, name, question, " + columnsStr + ") VALUES (" +
+                                "INSERT INTO poll(pollID, name, question, status, " + columnsStr + ") VALUES (" +
                                         "\"" + PollWrapper.manager.getPollID() + "\"" +
                                         ", \"" + PollWrapper.manager.getName() + "\"" +
                                         ", \"" + PollWrapper.manager.getQuestion() + "\"" +
+                                        ", \"" + PollWrapper.manager.getStatus().toString() + "\"" +
                                         ", " + choicesStr +
                                         ")");
                         DBConnection.closeConnection();
@@ -153,40 +156,66 @@ public class Servlet extends HttpServlet {
                     try {
                         DBConnection.getConnection();
                         try {
-                            Statement statement = DBConnection.conn.createStatement();
-                            ResultSet resultSet = statement.executeQuery("SELECT * FROM vote WHERE " +
-                                    "sessionID = " + "\"" + request.getSession().getId() + "\"" +
-                                    "AND pollID = " + "\"" + PollWrapper.manager.getPollID() + "\""
-                            );
-                            if (!resultSet.first()) {
-                                System.out.println("Generating a PIN for this Poll...");
-                                PollWrapper.manager.generatePIN();
-                                PreparedStatement preparedStatement = DBConnection.conn.prepareStatement(
-                                        "INSERT INTO vote (pollID, sessionID, pin, choice) VALUES (?,?,?,?)"
-                                );
-                                preparedStatement.setString(1, PollWrapper.manager.getPollID());
-                                preparedStatement.setString(2, request.getSession().getId());
-                                preparedStatement.setString(3, PollWrapper.manager.getPIN());
-                                preparedStatement.setString(4, PollWrapper.manager.getChoices()[i].getDescription());
-                                preparedStatement.executeUpdate();
-                                DBConnection.closeConnection();
-                            } else if(resultSet.first()){
-                                DBConnection.getConnection();
-                                PreparedStatement preparedStatement = DBConnection.conn.prepareStatement(
-                                        "UPDATE vote SET choice = ? WHERE pollID = ? AND pin = ?"
-                                );
-                                preparedStatement.setString(1, PollWrapper.manager.getChoices()[i].getDescription());
-                                preparedStatement.setString(2, PollWrapper.manager.getPollID());
-                                preparedStatement.setString(3, PollWrapper.manager.getPIN());
-                                preparedStatement.executeUpdate();
-                                DBConnection.closeConnection();
-                                if(request.getParameter("pinInputVote").equals("")){
-                                    System.out.println("We used your generated PIN from before to process the vote!");
-                                } else if(!request.getParameter("pinInputVote").equals(resultSet.first())){
-                                    // can the user enter different PINS within the same session?
-                                    System.out.println("The PIN was not equal to the one from your session!\n" +
-                                            "We used the generated one from before to process the vote.");
+                            PreparedStatement preparedStatement = DBConnection.conn.prepareStatement("SELECT * FROM vote WHERE sessionID = ? AND pollID = ?");
+                            preparedStatement.setString(1, request.getSession().getId());
+                            preparedStatement.setString(2, PollWrapper.manager.getPollID());
+                            ResultSet rsSessionIDAndPollID = preparedStatement.executeQuery();
+
+                            preparedStatement = DBConnection.conn.prepareStatement("SELECT * FROM vote WHERE pollID = ?");
+                            preparedStatement.setString(1, PollWrapper.manager.getPollID());
+                            ResultSet rsPollID = preparedStatement.executeQuery();
+                            boolean foundPIN = false;
+                            String tempPIN = "";
+                            while(rsPollID.next()){
+                                if(rsPollID.getString("pin").equals(request.getParameter("pinInputVote"))){
+                                    foundPIN = true;
+                                    tempPIN = rsPollID.getString("pin");
                                 }
+                            }
+                            // If the user has not been voting before
+                            if (!rsSessionIDAndPollID.first()) {
+                                // If user did not put anything for the PIN input
+                                if(request.getParameter("pinInputVote").equals("")){
+                                    System.out.println("Generating a PIN for the User for this Poll...");
+                                    PollWrapper.manager.generatePIN();
+                                    DBPollGateway.dbPoll.insertVote(
+                                            PollWrapper.manager.getPollID(),
+                                            request.getSession().getId(),
+                                            PollWrapper.manager.getPIN(),
+                                            PollWrapper.manager.getChoices()[i].getDescription()
+                                            );
+                                } else{
+                                    if(foundPIN){
+                                        DBPollGateway.dbPoll.updateVote(
+                                                PollWrapper.manager.getPollID(),
+                                                tempPIN,
+                                                PollWrapper.manager.getChoices()[i].getDescription()
+                                        );
+                                    } else{
+                                        System.out.println("There is no such PIN!");
+                                    }
+                                }
+                                DBConnection.closeConnection();
+                            } else if(rsSessionIDAndPollID.first()){
+                                if(request.getParameter("pinInputVote").equals("")){
+                                    System.out.println("Processing a Vote with the pre-generated PIN!");
+                                    DBPollGateway.dbPoll.updateVote(
+                                            PollWrapper.manager.getPollID(),
+                                            PollWrapper.manager.getPIN(),
+                                            PollWrapper.manager.getChoices()[i].getDescription()
+                                    );
+                                } else{
+                                    if(foundPIN){
+                                        DBPollGateway.dbPoll.updateVote(
+                                                PollWrapper.manager.getPollID(),
+                                                tempPIN,
+                                                PollWrapper.manager.getChoices()[i].getDescription()
+                                        );
+                                    } else{
+                                        System.out.println("There is no such PIN!");
+                                    }
+                                }
+                                DBConnection.closeConnection();
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();

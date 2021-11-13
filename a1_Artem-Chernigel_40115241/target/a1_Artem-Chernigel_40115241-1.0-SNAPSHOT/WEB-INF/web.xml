@@ -5,7 +5,7 @@
          version="4.0">
     <servlet>
         <servlet-name>Servlet</servlet-name>
-        <servlet-class>Servlet</servlet-class>
+        <servlet-class>web.Servlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Servlet</servlet-name>
@@ -13,10 +13,18 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>SearchServlet</servlet-name>
-        <servlet-class>SearchServlet</servlet-class>
+        <servlet-class>web.SearchServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SearchServlet</servlet-name>
         <url-pattern>/SearchServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>LogInServlet</servlet-name>
+        <servlet-class>web.LogInServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogInServlet</servlet-name>
+        <url-pattern>/LogInServlet</url-pattern>
     </servlet-mapping>
 </web-app>

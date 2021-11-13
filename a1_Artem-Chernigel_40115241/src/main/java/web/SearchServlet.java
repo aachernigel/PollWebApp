@@ -1,3 +1,5 @@
+package web;
+
 import PollManagerLib.*;
 
 import javax.servlet.*;
@@ -5,7 +7,6 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.sql.*;
-import java.util.Arrays;
 import java.util.LinkedList;
 
 @WebServlet(name = "SearchServlet", value = "/SearchServlet")

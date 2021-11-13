@@ -54,6 +54,7 @@
     }
 </script>
 
+<!-- FUNCTIONS: DELETE A POLL, CLOSE A POLL, GET LIST OF POLLS, -->
 <div class="functionsMenu">
     <table>
         <tr>

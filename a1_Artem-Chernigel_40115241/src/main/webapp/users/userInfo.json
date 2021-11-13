@@ -1,0 +1,25 @@
+{
+  "users": [
+    {
+      "userID": "968",
+      "firstName": "Rockey",
+      "lastName": "Swainston",
+      "emailAddress": "rswainston0@baidu.com",
+      "password": "52c88bca7c5b3ab3e7ed8901ea1bc83f"
+    },
+    {
+      "userID": "638",
+      "firstName": "Neils",
+      "lastName": "MacMakin",
+      "emailAddress": "nmacmakin3@wikimedia.org",
+      "password": "d8578edf8458ce06fbc5bb76a58c5ca4"
+    },
+    {
+      "userID": "862",
+      "firstName": "Batholomew",
+      "lastName": "Dillinton",
+      "emailAddress": "bdillintonc@shop-pro.jp",
+      "password": "202cb962ac59075b964b07152d234b70"
+    }
+  ]
+}

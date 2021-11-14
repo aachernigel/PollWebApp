@@ -81,11 +81,12 @@ public class Servlet extends HttpServlet {
                     try {
                         Statement statement = DBConnection.conn.createStatement();
                         statement.executeUpdate(
-                                "INSERT INTO poll(pollID, name, question, status, " + columnsStr + ") VALUES (" +
+                                "INSERT INTO poll(pollID, name, question, status, creatorID, " + columnsStr + ") VALUES (" +
                                         "\"" + PollWrapper.manager.getPollID() + "\"" +
                                         ", \"" + PollWrapper.manager.getName() + "\"" +
                                         ", \"" + PollWrapper.manager.getQuestion() + "\"" +
                                         ", \"" + PollWrapper.manager.getStatus().toString() + "\"" +
+                                        ", \"" + request.getSession().getAttribute("userID") + "\"" +
                                         ", " + choicesStr +
                                         ")");
                         DBConnection.closeConnection();
@@ -133,6 +134,7 @@ public class Servlet extends HttpServlet {
                         arr[i - 1] = new Choice(request.getParameter("choice" + i + "Update"));
                     }
                     try {
+                        // update on DB side
                         PollWrapper.manager.UpdatePoll(
                                 request.getParameter("pollNameUpdate"), request.getParameter("pollQuestionUpdate"),
                                 arr

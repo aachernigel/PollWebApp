@@ -54,6 +54,7 @@
     }
 </script>
 
+<!-- FUNCTIONS: DELETE A POLL, GET LIST OF POLLS, -->
 <div class="functionsMenu">
     <table>
         <tr>
@@ -112,6 +113,22 @@
                 <form action="unreleasePollPage.jsp">
                     <button type="submit" id="unreleasePollButton" class="functionButton">
                         Unrelease the Poll
+                    </button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <form action="deletePoll.jsp">
+                    <button type="submit" id="deletePollButton" class="functionButton">
+                        Delete the Poll
+                    </button>
+                </form>
+            </td>
+            <td>
+                <form action="getListOfPolls.jsp">
+                    <button type="submit" id="getListOfPollsButton" class="functionButton">
+                        Get List of Polls
                     </button>
                 </form>
             </td>

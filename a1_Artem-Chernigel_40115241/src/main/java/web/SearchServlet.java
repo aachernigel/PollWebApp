@@ -29,13 +29,7 @@ public class SearchServlet extends HttpServlet {
 
         if (ids.contains(request.getParameter("pollIDInput"))) {
             if (PollWrapper.manager.getStatus() != null)
-                try {
-                    PollWrapper.manager.ReleasePoll();
-                    PollWrapper.manager.ClosePoll();
-                    PollWrapper.manager.setStatus(null);
-                } catch (PollException pe) {
-                    System.err.println(pe);
-                }
+                PollWrapper.manager = new PollManager();
             initializePoll(request.getParameter("pollIDInput"));
             response.sendRedirect("home.jsp");
         } else {

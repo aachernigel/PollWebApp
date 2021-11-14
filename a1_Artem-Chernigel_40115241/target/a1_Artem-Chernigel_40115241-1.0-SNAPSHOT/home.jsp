@@ -9,9 +9,17 @@
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <script type="text/javascript" src="scripts/script.js"></script>
     <title>Home</title>
-    <%@ include file="login.jsp" %>
 </head>
 <body id="homePage">
+<%
+    if(session.getAttribute("userID") != null){
+%>
+<form action="AccessAdminServlet" method="post">
+    <button type="submit" id="adminButton">
+        AdminFunctions
+    </button>
+</form>
+<% } %>
 <form action="SearchServlet" method="get">
     </br>
     <label for="pinInput">

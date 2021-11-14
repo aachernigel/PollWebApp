@@ -28,3 +28,21 @@ function createRadioButton(elem, id, name, value) {
     spanRadio.innerHTML = spanInput.outerHTML;
     elem.parentNode.insertBefore(spanRadio, elem.previousSibling);
 }
+
+function createListOfPolls(elem, pollsDescription){
+    pollsDescription.split("|").forEach(poll => {
+        let divElement = document.createElement("div");
+        divElement.className = "pollMessage";
+        let fields = poll.split("&!#@");
+        divElement.innerHTML = "pollID: " + fields[0] +
+            " name: " + fields[1] +
+            " question: " + fields[2] +
+            " status: " + fields[3] +
+            " creatorID: " + fields[4];
+        for(let i = 5; i < fields.length; i++){
+            divElement.innerHTML += "option" + (i - 4) + fields[i] + " ";
+        }
+        console.log(divElement.innerHTML);
+        elem.parentNode.insertBefore(divElement, elem.previousSibling);
+    });
+}

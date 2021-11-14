@@ -16,6 +16,9 @@
     }
 
 </script>
+<%
+    if(session.getAttribute("userID") == null){
+%>
 <div class="loginDiv">
     <form method="post" action="LogInServlet">
         <label for="userIDLogIn" id="userIDLogInLabel">User ID:</label><br/>
@@ -29,6 +32,19 @@
             <%=request.getAttribute("error") == null ? "" : request.getAttribute("error")%>
         </p>
     </form>
+    <% }else{ %>
+    <p>Hello!</p>
+    <form action="numberOfOptionsPage.jsp">
+        <button type="submit" id="adminButton">
+            Create a new Poll
+        </button>
+    </form>
+    <form action="LogInServlet" method="get">
+        <button type="submit" id="logOutButton">
+            Log Out
+        </button>
+    </form>
+    <% } %>
     <form method="post" action="RegisterServlet">
         <button type="submit" id="register" onclick="alert('The feature is not implemented yet!')">
             Register

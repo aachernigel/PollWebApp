@@ -68,6 +68,8 @@ public class PollManager {
         this.pin = pin;
     }
 
+    public Hashtable<String, Pair<Choice, String>> getParticipants(){ return this.participants; }
+
     private void setValues(String name, String question, Choice[] choices) throws PollException {
         if (name.equals("")) {
             throw new PollException("setValues", "Name of the Poll cannot be empty");
@@ -111,10 +113,9 @@ public class PollManager {
         this.pin = pin;
     }
 
+    // Can a user update/release and so on the poll that was not created by him?
     public void CreatePoll(String name, String question, Choice[] choices) throws PollException {
         if (this.status == null || this.status == PollStatus.RELEASED) {
-            // change of the status would be better made in PollManager because all of the checks are made here
-            // but can we use web.DBConnection in poll manager or it is solely for the JSP part?
             this.status = PollStatus.CREATED;
             this.generateID();
             this.choiceTable = new Hashtable<>();
@@ -165,6 +166,8 @@ public class PollManager {
     public void ClosePoll() throws PollException {
         if (this.status == PollStatus.RELEASED) {
             try {
+                this.status = PollStatus.CLOSED;
+                DBPollGateway.dbPoll.updateStatus(PollStatus.CLOSED);
                 ClearPoll();
                 this.choiceTable = null;
                 this.participants = null;

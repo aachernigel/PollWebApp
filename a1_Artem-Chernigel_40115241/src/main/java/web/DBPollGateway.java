@@ -4,6 +4,7 @@ import PollManagerLib.PollStatus;
 import PollManagerLib.PollWrapper;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBPollGateway {
@@ -51,6 +52,31 @@ public class DBPollGateway {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void deletePoll(){
+        try{
+            preparedStatement = DBConnection.conn.prepareStatement(
+                    "DELETE FROM poll WHERE pollID = ?"
+            );
+            preparedStatement.setString(1, PollWrapper.manager.getPollID());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ResultSet getListOfPolls(String creatorID){
+        try{
+            preparedStatement = DBConnection.conn.prepareStatement(
+                    "SELECT * FROM poll WHERE creatorID = ?"
+            );
+            preparedStatement.setString(1, creatorID);
+            return preparedStatement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

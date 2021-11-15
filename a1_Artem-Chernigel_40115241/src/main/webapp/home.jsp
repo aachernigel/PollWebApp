@@ -87,12 +87,20 @@
     </div>
 </div>
 <%
-} else if (PollWrapper.manager.getStatus() == PollStatus.RELEASED) {
+} else if (PollWrapper.manager.getStatus() == PollStatus.RELEASED || PollWrapper.manager.getStatus() == PollStatus.CLOSED) {
 %>
 <div class="pollMessage">
     <div class="innerDiv">
+        <% if(PollWrapper.manager.getStatus() == PollStatus.RELEASED){%>
         <p>The Poll is now released! <br/>
         </p>
+        <% } else {%>
+        <p>The Poll is permanently closed! <br/>
+        </p>
+        <script>
+            document.getElementById("adminButton").disabled = true;
+        </script>
+        <% } %>
         <button type="submit" onclick="window.location.href='results.jsp'">
             Results
         </button>
@@ -100,13 +108,19 @@
         </p>
         <form action="Servlet" method="get">
             <input type="hidden" name="pollNameDownload" value="<%=PollWrapper.manager.getName()%>">
-            <input type="hidden" name="pollFormatDownload" value="text">
+            <label>In which format would you like to download the results?</label>
+            <br/><br/>
+            <select id="pollFormatDownload" name="pollFormatDownload">
+                <option value=".txt">.txt</option>
+                <option value=".json">.json</option>
+                <option value=".xml">.xml</option>
+            </select>
             <button type="submit">
                 Download
             </button>
         </form>
     </div>
 </div>
-<% }%>
+<% } %>
 </body>
 </html>

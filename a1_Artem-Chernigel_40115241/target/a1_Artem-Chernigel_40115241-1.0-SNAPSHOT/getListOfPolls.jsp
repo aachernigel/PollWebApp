@@ -29,7 +29,7 @@
     System.out.println(pollsDesc);
 %>
 <body>
-<input type="text" id="temp" name="temp">
+<input type="hidden" id="temp" name="temp">
 <script>
     let pollsDescription = "<%=pollsDesc%>";
     pollsDescription.split("|").forEach(poll => {

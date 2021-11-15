@@ -6,8 +6,23 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Hashtable;
+
+import com.mysql.cj.xdevapi.JsonArray;
+import com.mysql.cj.xdevapi.JsonValue;
+import org.json.JSONObject;
+import org.json.simple.JSONValue;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import web.DBConnection;
 import web.DBPollGateway;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 public class PollManager {
     private static int ID_LENGTH = 10;
@@ -21,7 +36,7 @@ public class PollManager {
     private Hashtable<Choice, Integer> choiceTable;
     private Hashtable<String, Pair<Choice, String>> participants;
     private LocalDateTime date;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH:mm:ss");
+    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public PollManager() {
         this.status = null;
@@ -157,6 +172,7 @@ public class PollManager {
             }
             if (this.status == PollStatus.RELEASED)
                 this.status = PollStatus.CREATED;
+            DBPollGateway.dbPoll.deleteVotes();
             DBPollGateway.dbPoll.updateStatus(PollWrapper.manager.getStatus());
         } else {
             throw new PollException("Clear", "Status is not RUNNING or RELEASED");
@@ -166,12 +182,12 @@ public class PollManager {
     public void ClosePoll() throws PollException {
         if (this.status == PollStatus.RELEASED) {
             try {
-                this.status = PollStatus.CLOSED;
-                DBPollGateway.dbPoll.updateStatus(PollStatus.CLOSED);
                 ClearPoll();
                 this.choiceTable = null;
                 this.participants = null;
                 this.choices = null;
+                this.status = PollStatus.CLOSED;
+                DBPollGateway.dbPoll.updateStatus(PollStatus.CLOSED);
             } catch (PollException pe) {
                 System.err.println(pe);
             }
@@ -210,17 +226,17 @@ public class PollManager {
         }
     }
 
-    public void Vote(String participant, Choice choice) throws PollException {
+    public void Vote(String participant, Choice choice, LocalDateTime... date) throws PollException {
         if (this.status == PollStatus.RUNNING) {
             System.out.println("Participant is: " + participant);
             if (this.participants == null) {
                 this.participants = new Hashtable<>();
             }
+            this.date = date.length > 0 ? date[0] : LocalDateTime.now();
             if (!this.participants.containsKey(participant)) {
                 choice.setChoiceCounter(choice.getChoiceCounter() + 1);
                 this.choiceTable.put(choice, choice.getChoiceCounter());
-                date = LocalDateTime.now();
-                this.participants.put(participant, new Pair<>(choice, date.format(formatter)));
+                this.participants.put(participant, new Pair<>(choice, this.date.format(formatter)));
                 System.out.println("The participant successfully voted");
             } else {
                 if (!choice.getDescription().equals(participants.get(participant).getFirst().getDescription())) {
@@ -230,8 +246,7 @@ public class PollManager {
                     choice.setChoiceCounter(choice.getChoiceCounter() + 1);
                     this.choiceTable.put(choice, choice.getChoiceCounter());
                     // Update participant's choice in participants
-                    date = LocalDateTime.now();
-                    this.participants.put(participant, new Pair<>(choice, date.format(formatter)));
+                    this.participants.put(participant, new Pair<>(choice, this.date.format(formatter)));
                     System.out.println("The participant successfully changed his mind");
                 }
             }
@@ -250,14 +265,69 @@ public class PollManager {
     public void DownloadPollDetails(PrintWriter output, String filename) throws PollException {
         if (this.status == PollStatus.RELEASED) {
             try {
-                output.println("Title: " + PollWrapper.manager.getName());
-                output.println("Question: " + PollWrapper.manager.getQuestion());
-                output.println("Choices: ");
-                for (int i = 0; i < PollWrapper.manager.getChoices().length; i++)
-                    output.println("\t" + PollWrapper.manager.getChoices()[i].getDescription());
-                output.println("Votes: ");
-                for (Pair p : PollWrapper.manager.participants.values())
-                    output.println(((Choice) p.getFirst()).getDescription() + " " + p.getSecond());
+                if(filename.contains(".txt")){
+                    output.println("Title: " + PollWrapper.manager.getName());
+                    output.println("Question: " + PollWrapper.manager.getQuestion());
+                    output.println("Choices: ");
+                    for (int i = 0; i < PollWrapper.manager.getChoices().length; i++)
+                        output.println("\t" + PollWrapper.manager.getChoices()[i].getDescription());
+                    output.println("Votes: ");
+                    for (Pair p : PollWrapper.manager.participants.values())
+                        output.println("\t" + ((Choice) p.getFirst()).getDescription() + " " + p.getSecond());
+                } else if(filename.contains(".json")){
+                    JSONObject jsonPoll = new JSONObject();
+                    JSONObject jsonChoices = new JSONObject();
+                    JSONObject jsonVotes = new JSONObject();
+                    for (int i = 1; i < PollWrapper.manager.getChoices().length + 1; i++)
+                        jsonChoices.put("option" + i, PollWrapper.manager.getChoices()[i - 1].getDescription());
+                    for (Pair p : PollWrapper.manager.participants.values()){
+                        System.out.println("\t" + ((Choice) p.getFirst()).getDescription() + " " + p.getSecond());
+                        jsonVotes.put(p.getSecond().toString(), ((Choice) p.getFirst()).getDescription());
+                    }
+                    jsonPoll.put("Choices", jsonChoices);
+                    jsonPoll.put("Title", PollWrapper.manager.getName());
+                    jsonPoll.put("Question", PollWrapper.manager.getQuestion());
+                    jsonPoll.put("Votes", jsonVotes);
+                    output.println(jsonPoll.toString(4));
+                } else if(filename.contains(".xml")){
+                    DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+                    Document document = documentBuilder.newDocument();
+                    Element rootElement = document.createElement("poll");
+                    document.appendChild(rootElement);
+                    rootElement.setAttribute("id", PollWrapper.manager.getPollID());
+                    Element title = document.createElement("title");
+                    title.setTextContent(PollWrapper.manager.getName());
+                    rootElement.appendChild(title);
+                    Element question = document.createElement("question");
+                    question.setTextContent(PollWrapper.manager.getQuestion());
+                    rootElement.appendChild(question);
+                    Element choices = document.createElement("choices");
+                    Element choice;
+                    for (int i = 1; i < PollWrapper.manager.getChoices().length + 1; i++){
+                        choice = document.createElement("choice");
+                        choice.setAttribute("id", "option" + i);
+                        choice.setTextContent(PollWrapper.manager.getChoices()[i - 1].getDescription());
+                        choices.appendChild(choice);
+                    }
+                    rootElement.appendChild(choices);
+                    Element votes = document.createElement("votes");
+                    Element vote;
+                    for (Pair p : PollWrapper.manager.participants.values()){
+                        vote = document.createElement("vote");
+                        vote.setAttribute("id", p.getSecond().toString());
+                        vote.setTextContent(((Choice) p.getFirst()).getDescription());
+                        votes.appendChild(vote);
+                    }
+                    rootElement.appendChild(votes);
+                    DOMSource source = new DOMSource(document);
+                    StreamResult result = new StreamResult(output);
+                    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                    Transformer transformer = transformerFactory.newTransformer();
+                    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+                    transformer.transform(source, result);
+                }
             } catch (Exception e) {
                 System.err.println(e);
             } finally {

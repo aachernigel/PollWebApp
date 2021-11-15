@@ -12,6 +12,7 @@
 <%
     if(PollWrapper.manager.getParticipants() == null) {
       DBPollGateway.dbPoll.deletePoll();
+      response.sendRedirect("index.jsp");
     } else{
       System.out.println("The poll was already voted on! You cannot delete it!");
       response.sendRedirect("adminMenu.jsp");

@@ -3,4 +3,5 @@ CREATE TABLE `polldb`.`vote` (
   `sessionID` VARCHAR(100) NOT NULL,
   `pin` VARCHAR(6) NOT NULL,
   `option` VARCHAR(100),
+  `dateTime` DATETIME NULL,
   PRIMARY KEY (`pollID`, `sessionID`));

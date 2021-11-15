@@ -9,10 +9,13 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.*;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @WebServlet(name = "Servlet", value = "/Servlet")
 public class Servlet extends HttpServlet {
-    private final String FORMAT = "text";
+    private final String FORMATS = ".txt.json.xml";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -20,18 +23,17 @@ public class Servlet extends HttpServlet {
             if (!request.getParameter("pollNameDownload").equals(PollWrapper.manager.getName())) {
                 System.err.println("ERROR: Poll name does not match in doGet");
                 response.sendRedirect("home.jsp");
-            } else if (!request.getParameter("pollFormatDownload").equals(FORMAT)) {
+            } else if (!FORMATS.contains(request.getParameter("pollFormatDownload"))) {
                 System.err.println("ERROR: Download format does not match in doGet");
                 response.sendRedirect("home.jsp");
             } else {
-                String filename = PollWrapper.manager.getName() + "-" + PollWrapper.manager.getTime() + ".txt";
+                String filename = PollWrapper.manager.getName() + "-" + PollWrapper.manager.getTime() + request.getParameter("pollFormatDownload");
                 ServletOutputStream out = response.getOutputStream();
                 PrintWriter pw;
                 response.addHeader("Content-Disposition",
                         "attachment; filename=" + filename);
                 response.setHeader("Cache-Control", "no-cache");
                 response.setDateHeader("Expires", 0);
-
                 try {
                     pw = new PrintWriter(out);
                     try {
@@ -139,6 +141,7 @@ public class Servlet extends HttpServlet {
                                 request.getParameter("pollNameUpdate"), request.getParameter("pollQuestionUpdate"),
                                 arr
                         );
+                        DBPollGateway.dbPoll.updatePoll();
                     } catch (PollException pe) {
                         System.err.println(pe);
                     }
@@ -168,8 +171,8 @@ public class Servlet extends HttpServlet {
                             ResultSet rsPollID = preparedStatement.executeQuery();
                             boolean foundPIN = false;
                             String tempPIN = "";
-                            while(rsPollID.next()){
-                                if(rsPollID.getString("pin").equals(request.getParameter("pinInputVote"))){
+                            while (rsPollID.next()) {
+                                if (rsPollID.getString("pin").equals(request.getParameter("pinInputVote"))) {
                                     foundPIN = true;
                                     tempPIN = rsPollID.getString("pin");
                                 }
@@ -177,43 +180,47 @@ public class Servlet extends HttpServlet {
                             // If the user has not been voting before
                             if (!rsSessionIDAndPollID.first()) {
                                 // If user did not put anything for the PIN input
-                                if(request.getParameter("pinInputVote").equals("")){
+                                if (request.getParameter("pinInputVote").equals("")) {
                                     System.out.println("Generating a PIN for the User for this Poll...");
                                     PollWrapper.manager.generatePIN();
                                     DBPollGateway.dbPoll.insertVote(
                                             PollWrapper.manager.getPollID(),
                                             request.getSession().getId(),
                                             PollWrapper.manager.getPIN(),
-                                            PollWrapper.manager.getChoices()[i].getDescription()
-                                            );
-                                } else{
-                                    if(foundPIN){
+                                            PollWrapper.manager.getChoices()[i].getDescription(),
+                                            LocalDateTime.now()
+                                    );
+                                } else {
+                                    if (foundPIN) {
                                         DBPollGateway.dbPoll.updateVote(
                                                 PollWrapper.manager.getPollID(),
                                                 tempPIN,
-                                                PollWrapper.manager.getChoices()[i].getDescription()
+                                                PollWrapper.manager.getChoices()[i].getDescription(),
+                                                LocalDateTime.now()
                                         );
-                                    } else{
+                                    } else {
                                         System.out.println("There is no such PIN!");
                                     }
                                 }
                                 DBConnection.closeConnection();
-                            } else if(rsSessionIDAndPollID.first()){
-                                if(request.getParameter("pinInputVote").equals("")){
+                            } else if (rsSessionIDAndPollID.first()) {
+                                if (request.getParameter("pinInputVote").equals("")) {
                                     System.out.println("Processing a Vote with the pre-generated PIN!");
                                     DBPollGateway.dbPoll.updateVote(
                                             PollWrapper.manager.getPollID(),
                                             PollWrapper.manager.getPIN(),
-                                            PollWrapper.manager.getChoices()[i].getDescription()
+                                            PollWrapper.manager.getChoices()[i].getDescription(),
+                                            LocalDateTime.now()
                                     );
-                                } else{
-                                    if(foundPIN){
+                                } else {
+                                    if (foundPIN) {
                                         DBPollGateway.dbPoll.updateVote(
                                                 PollWrapper.manager.getPollID(),
                                                 tempPIN,
-                                                PollWrapper.manager.getChoices()[i].getDescription()
+                                                PollWrapper.manager.getChoices()[i].getDescription(),
+                                                LocalDateTime.now()
                                         );
-                                    } else{
+                                    } else {
                                         System.out.println("There is no such PIN!");
                                     }
                                 }

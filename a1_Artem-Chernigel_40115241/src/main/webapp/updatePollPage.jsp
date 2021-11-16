@@ -21,10 +21,12 @@
     </script>
 </head>
 <body id="updatePollBody">
+<div class="loginDiv">
+    <button onclick="window.location.href='home.jsp'">Poll</button>
+</div>
 <%int numOfOptions = PollWrapper.manager.getChoices().length;%>
 <div class="pollMessage" id="updatePollDiv">
     <div class="innerDiv" id="updatePollInnerDiv">
-        <button onclick="window.location.href='home.jsp'">Home</button>
         <p>Would you like to update the poll fields as well?</p>
         <label class="spanRadio">
     <span class="spanInput">

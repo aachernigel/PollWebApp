@@ -11,25 +11,27 @@
     <title>Home</title>
 </head>
 <body id="homePage">
-<%
-    if(session.getAttribute("userID") != null){
-%>
-<form action="AccessAdminServlet" method="post">
-    <button type="submit" id="adminButton">
-        AdminFunctions
+<div class="loginDiv">
+    <form action="SearchServlet" method="get">
+        <input type="text" name="pinInput" id="pinInput" placeholder="Your PIN# will be here"
+               value="<%=PollWrapper.manager.getPIN() == null ? "" : PollWrapper.manager.getPIN()%>">
+        <button type="submit" name="requestPIN#" id="requestPIN#">
+            Request PIN#
+        </button>
+    </form>
+    <%
+        if (session.getAttribute("userID") != null) {
+    %>
+    <form action="AccessAdminServlet" method="post">
+        <button type="submit" id="adminButton">
+            AdminFunctions
+        </button>
+    </form>
+    <% } %>
+    <button onclick="window.location.href='index.jsp'" id="homePageButton">
+        Home
     </button>
-</form>
-<% } %>
-<form action="SearchServlet" method="get">
-    </br>
-    <label for="pinInput">
-        PIN#:
-    </label></br>
-    <input type="text" name="pinInput" id="pinInput" value="<%=PollWrapper.manager.getPIN() == null ? "" : PollWrapper.manager.getPIN()%>">
-    <button type="submit" name="requestPIN#" id="requestPIN#">
-        Request PIN#
-    </button>
-</form>
+</div>
 <%
     if (PollWrapper.manager.getStatus() == null) {
 %>
@@ -66,10 +68,8 @@
             <button type="submit" id="submitHome">
                 Vote
             </button>
-            <label for="pinInputVote">
-                PIN# (Optional):
-            </label></br>
-            <input type="text" name="pinInputVote" id="pinInputVote">
+            </br>
+            <input type="text" name="pinInputVote" id="pinInputVote" placeholder="Enter the PIN#">
         </form>
         <script>
             console.log("<%=numOfOptions%>")
@@ -91,7 +91,7 @@
 %>
 <div class="pollMessage">
     <div class="innerDiv">
-        <% if(PollWrapper.manager.getStatus() == PollStatus.RELEASED){%>
+        <% if (PollWrapper.manager.getStatus() == PollStatus.RELEASED) {%>
         <p>The Poll is now released! <br/>
         </p>
         <% } else {%>

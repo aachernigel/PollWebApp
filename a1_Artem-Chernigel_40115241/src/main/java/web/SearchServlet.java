@@ -37,7 +37,8 @@ public class SearchServlet extends HttpServlet {
                 response.sendRedirect("index.jsp");
         } else {
             System.out.println("Such pollID does not exist");
-            response.sendRedirect("index.jsp");
+            request.setAttribute("error", "Such pollID does not exist!");
+            request.getRequestDispatcher("search.jsp").forward(request, response);
         }
     }
 
@@ -120,7 +121,8 @@ public class SearchServlet extends HttpServlet {
                 resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     for (int i = 0; i < PollWrapper.manager.getChoices().length; i++) {
-                        if (resultSet.getString("choice").equals(PollWrapper.manager.getChoices()[i].getDescription())) {
+                        if (resultSet.getString("choice") != null &&
+                                resultSet.getString("choice").equals(PollWrapper.manager.getChoices()[i].getDescription())) {
 
                             String date = resultSet.getString("dateTime").split(" ")[0];
                             String time = resultSet.getString("dateTime").split(" ")[1];

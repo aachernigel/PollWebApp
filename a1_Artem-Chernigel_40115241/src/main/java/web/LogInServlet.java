@@ -64,7 +64,7 @@ public class LogInServlet extends HttpServlet {
                 response.sendRedirect("index.jsp");
             } else {
                 request.setAttribute("error", "User-ID or Password does not match!");
-                request.getRequestDispatcher("index.jsp").forward(request, response);
+                request.getRequestDispatcher("login.jsp").forward(request, response);
             }
 
         } catch (NoSuchAlgorithmException e) {

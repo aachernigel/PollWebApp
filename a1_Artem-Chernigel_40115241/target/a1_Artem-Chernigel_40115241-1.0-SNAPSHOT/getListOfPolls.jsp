@@ -10,10 +10,8 @@
     <title>GetListOfPolls</title>
 </head>
 <%
-    System.out.println((String) session.getAttribute("userID"));
     ResultSet polls = DBPollGateway.dbPoll.getListOfPolls((String) session.getAttribute("userID"));
     String pollsDesc = "";
-    boolean finished = false;
     while (polls.next()) {
         pollsDesc += polls.getString("pollID") + "&!#@";
         pollsDesc += polls.getString("name") + "&!#@";
@@ -25,26 +23,36 @@
         if (!polls.isLast())
             pollsDesc += "|";
     }
-    finished = true;
-    System.out.println(pollsDesc);
 %>
-<body>
+<body id="listOfPollsPage">
+<div class="loginDiv">
+    <button onclick="window.location.href='home.jsp'">Poll</button>
+</div>
 <input type="hidden" id="temp" name="temp">
 <script>
     let pollsDescription = "<%=pollsDesc%>";
     pollsDescription.split("|").forEach(poll => {
         let divElement = document.createElement("div");
-        divElement.className = "pollMessage";
+        let innerDivElement = document.createElement("div");
+        let paragraph = document.createElement("p");
+        innerDivElement.className = "listOfPollsInnerDiv";
+        divElement.className = "listOfPollsMessage";
         let fields = poll.split("&!#@");
-        divElement.innerHTML = "pollID: " + fields[0] +
-            " name: " + fields[1] +
-            " question: " + fields[2] +
-            " status: " + fields[3] +
-            " creatorID: " + fields[4];
+        paragraph.innerHTML =  "The ID of the Poll is <b>" + fields[0] + "</b>" +
+            ", while the name is <b>" + fields[1] + "</b>" +
+            ". The question of the latter Poll was the following: <b>" + fields[2] + "</b>" +
+            ". The current status of the Poll is  <b>" + fields[3] + "</b>" +
+            ". Oh, and by the way, the ID of the creator (your ID) is <b>" + fields[4] + "</b>" +
+            ". The options that were presented in the Poll were:";
         for(let i = 5; i < fields.length - 1; i++){
-            divElement.innerHTML += "option" + (i - 4) + ": " + fields[i] + " ";
+            paragraph.innerHTML += "<b>" + fields[i];
+            if(i == fields.length - 2)
+                paragraph.innerHTML += ".</b>";
+            else
+                paragraph.innerHTML += ", </b>";
         }
-        console.log(divElement.innerHTML);
+        innerDivElement.innerHTML = paragraph.outerHTML;
+        divElement.innerHTML = innerDivElement.outerHTML;
         document.getElementById("temp").parentNode.insertBefore(divElement, document.getElementById("temp").previousSibling);
     });
 </script>

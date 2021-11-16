@@ -10,8 +10,24 @@
     background-image: url("../images/street2.gif");
 }
 
-#resultsBody{
+#resultsBody {
     background-image: url("../images/mountain.gif");
+}
+
+#indexPage {
+    background-image: url("../images/bar.gif");
+}
+
+#loginPage {
+    background-image: url("../images/room.gif");
+}
+
+#searchPage {
+    background-image: url("../images/cave.gif");
+}
+
+#listOfPollsPage{
+    background-image: url("../images/galaxy.gif");
 }
 
 .functionsMenu {
@@ -19,6 +35,10 @@
     justify-content: center;
     align-items: center;
     padding-top: 7%;
+}
+
+#indexFunctionsMenu {
+    padding-top: 300px;
 }
 
 #homeButton {
@@ -87,6 +107,61 @@
     background-color: #c49fc2;
 }
 
+#loginButton {
+    font-size: 30px;
+    padding-top: 28px;
+    font-family: Tahoma;
+    background-color: #4479d8;
+    width: 330px;
+    height: 100px;
+}
+
+#loginButton:hover {
+    background-color: #3f5fb4;
+}
+
+#registerButton {
+    font-size: 30px;
+    padding-top: 28px;
+    font-family: Tahoma;
+    background-color: #d5ad74;
+    width: 330px;
+    height: 100px;
+}
+
+#registerButton:hover {
+    background-color: #b8905e;
+}
+
+#searchButton {
+    font-size: 30px;
+    padding-top: 28px;
+    font-family: Tahoma;
+    background-color: #957de2;
+    width: 330px;
+    height: 100px;
+}
+
+#searchButton:hover {
+    background-color: #7a64c7;
+}
+
+#deletePollButton {
+    background-color: #d15258;
+}
+
+#deletePollButton:hover {
+    background-color: #aa5255;
+}
+
+#getListOfPollsButton {
+    background-color: #5ecca2;
+}
+
+#getListOfPollsButton:hover {
+    background-color: #59b187;
+}
+
 select {
     font-size: 24px;
     border: 1px solid #969796;
@@ -109,6 +184,19 @@ select:hover {
     padding: 10px;
     height: 450px;
     text-align: center;
+    margin-top: 50px;
+}
+
+.listOfPollsMessage{
+    display: flex;
+    flex-direction: column;
+    /*justify-content: center;*/
+    align-items: center;
+    padding: 10px;
+    padding-bottom: 180px;
+    height: 100px;
+    text-align: center;
+    margin-top: 50px;
 }
 
 .innerDiv {
@@ -117,14 +205,28 @@ select:hover {
     opacity: 0.8;
     border-radius: 5px;
     width: 400px;
-    padding: 3%;
+    padding: 30px;
+}
+
+.listOfPollsInnerDiv {
+    box-shadow: 4px 3px 8px 1px #969696;
+    background-color: lightgray;
+    opacity: 0.8;
+    border-radius: 5px;
+    width: 600px;
+    padding: 30px;
+}
+
+#adminButton, #homePageButton {
+    margin-bottom: 8px;
+    margin-left: 5px;
 }
 
 #createPollDiv {
     padding-top: 100px;
 }
 
-#updatePollDiv{
+#updatePollDiv {
     padding-top: 150px;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -146,7 +248,7 @@ select:hover {
     height: 500px;
 }
 
-#updatePollInnerDiv{
+#updatePollInnerDiv {
     margin-top: 5px;
     margin-left: 5px;
     padding-top: 15px;
@@ -162,6 +264,26 @@ select:hover {
     padding-top: 25px;
     padding-bottom: 25px;
     text-align: left;
+}
+
+#searchInnerDiv {
+    margin-top: 200px;
+    margin-bottom: 0px;
+}
+
+#searchPollMessageDiv {
+    height: 280px;
+    margin-top: 250px;
+}
+
+#searchInnerDiv #searchPollMessageDiv {
+    margin-top: 0;
+}
+
+#loginInnerDiv {
+    margin-top: 150px;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 label {
@@ -187,7 +309,7 @@ input[type=text], input[type=password] {
     transition-duration: 0.4s;
 }
 
-input[type=text]:focus, input[type=password]:focus{
+input[type=text]:focus, input[type=password]:focus {
     border-color: cornflowerblue;
     border-width: 2px;
 }
@@ -240,11 +362,11 @@ input[type=radio]:checked + .spanControl {
     border-color: #bbc3bc;
     background-color: darkblue;
     color: white;
-    font-size: 22px;
+    font-size: 33px;
     padding: 36px 36px;
     margin: 5px;
-    width: 300px;
-    height: 80px;
+    width: 350px;
+    height: 120px;
 }
 
 input[type=button], button {
@@ -291,8 +413,20 @@ body {
     font-family: Tahoma;
 }
 
-#passwordLogInLabel, #userIDLogInLabel {
-    color: lightgray;
+#passwordLogInLabel {
+    color: #061a3d;
     font-weight: bold;
     font-size: 18px;
+    padding-right: 110px;
+}
+
+#userIDLogInLabel, #pollIDLoginLabel {
+    color: #061a3d;
+    font-weight: bold;
+    font-size: 18px;
+    padding-right: 130px;
+}
+
+#searchButton {
+    width: 98.5%;
 }

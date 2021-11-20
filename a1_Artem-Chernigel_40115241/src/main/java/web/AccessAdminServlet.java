@@ -22,7 +22,7 @@ public class AccessAdminServlet extends HttpServlet {
         DBConnection.getConnection();
         try {
             // set a parameter to inform a user that he cannot use admin functions for this poll
-            PreparedStatement preparedStatement = DBConnection.conn.prepareStatement("SELECT pollID FROM poll WHERE creatorID = ?");
+            PreparedStatement preparedStatement = DBConnection.connection.prepareStatement("SELECT pollID FROM poll WHERE creatorID = ?");
             preparedStatement.setString(1, (String) request.getSession().getAttribute("userID"));
             ResultSet resultSet = preparedStatement.executeQuery();
             boolean found = false;

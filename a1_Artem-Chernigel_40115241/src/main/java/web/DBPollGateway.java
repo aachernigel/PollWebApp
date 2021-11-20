@@ -19,7 +19,7 @@ public class DBPollGateway {
 
     public void updateStatus(PollStatus status) {
         try {
-            preparedStatement = DBConnection.conn.prepareStatement("UPDATE poll SET status = ? WHERE pollID = ?");
+            preparedStatement = DBConnection.connection.prepareStatement("UPDATE poll SET status = ? WHERE pollID = ?");
             preparedStatement.setString(1, PollWrapper.manager.getStatus().toString());
             preparedStatement.setString(2, PollWrapper.manager.getPollID());
             preparedStatement.executeUpdate();
@@ -30,7 +30,7 @@ public class DBPollGateway {
 
     public void insertVote(String pollID, String sessionID, String pin, String choice, LocalDateTime dateTime) {
         try {
-            preparedStatement = DBConnection.conn.prepareStatement(
+            preparedStatement = DBConnection.connection.prepareStatement(
                     "INSERT INTO vote (pollID, sessionID, pin, choice, dateTime) VALUES (?,?,?,?,?)"
             );
             preparedStatement.setString(1, pollID);
@@ -46,7 +46,7 @@ public class DBPollGateway {
 
     public void updateVote(String pollID, String pin, String choice, LocalDateTime dateTime) {
         try {
-            preparedStatement = DBConnection.conn.prepareStatement(
+            preparedStatement = DBConnection.connection.prepareStatement(
                     "UPDATE vote SET choice = ?, dateTime = ? WHERE pollID = ? AND pin = ?"
             );
             preparedStatement.setString(1, choice);
@@ -61,7 +61,7 @@ public class DBPollGateway {
 
     public void deleteVotes(){
         try {
-            preparedStatement = DBConnection.conn.prepareStatement(
+            preparedStatement = DBConnection.connection.prepareStatement(
                     "DELETE FROM vote WHERE pollID = ?"
             );
             preparedStatement.setString(1, PollWrapper.manager.getPollID());
@@ -73,7 +73,7 @@ public class DBPollGateway {
 
     public void deletePoll(){
         try{
-            preparedStatement = DBConnection.conn.prepareStatement(
+            preparedStatement = DBConnection.connection.prepareStatement(
                     "DELETE FROM poll WHERE pollID = ?"
             );
             preparedStatement.setString(1, PollWrapper.manager.getPollID());
@@ -85,7 +85,7 @@ public class DBPollGateway {
 
     public void updatePoll(){
         try{
-            preparedStatement = DBConnection.conn.prepareStatement(
+            preparedStatement = DBConnection.connection.prepareStatement(
                     "UPDATE poll SET name = ?, question = ?, status = ?, option1 = ?, option2 = ?, option3 = ?, " +
                             "option4 = ? , option5 = ?, option6 = ?, option7 = ?," +
                             " option8 = ?, option9 = ?, option10 = ? WHERE pollID = ?"
@@ -111,7 +111,7 @@ public class DBPollGateway {
 
     public ResultSet getListOfPolls(String creatorID){
         try{
-            preparedStatement = DBConnection.conn.prepareStatement(
+            preparedStatement = DBConnection.connection.prepareStatement(
                     "SELECT * FROM poll WHERE creatorID = ?"
             );
             preparedStatement.setString(1, creatorID);

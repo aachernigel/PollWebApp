@@ -43,7 +43,7 @@
             ". The question of the latter Poll was the following: <b>" + fields[2] + "</b>" +
             ". The current status of the Poll is  <b>" + fields[3] + "</b>" +
             ". Oh, and by the way, the ID of the creator (your ID) is <b>" + fields[4] + "</b>" +
-            ". The options that were presented in the Poll were:";
+            ". The options that were presented in the Poll were: ";
         for(let i = 5; i < fields.length - 1; i++){
             paragraph.innerHTML += "<b>" + fields[i];
             if(i == fields.length - 2)

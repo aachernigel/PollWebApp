@@ -18,7 +18,7 @@ public class SearchServlet extends HttpServlet {
         DBConnection.getConnection();
         LinkedList<String> ids = new LinkedList<>();
         try {
-            Statement statement = DBConnection.conn.createStatement();
+            Statement statement = DBConnection.connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT pollID FROM poll");
             while (resultSet.next()) {
                 ids.add(resultSet.getString("pollID"));
@@ -44,19 +44,19 @@ public class SearchServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (PollWrapper.manager.getPIN() == null) {
+        if (PollWrapper.manager.getPin() == null) {
             PollWrapper.manager.generatePIN();
             DBConnection.getConnection();
             try {
-                Statement statement = DBConnection.conn.createStatement();
+                Statement statement = DBConnection.connection.createStatement();
                 ResultSet resultSet = statement.executeQuery("SELECT * FROM vote WHERE " +
-                        "pin = " + "\"" + PollWrapper.manager.getPIN() + "\"" +
+                        "pin = " + "\"" + PollWrapper.manager.getPin() + "\"" +
                         "AND pollID = " + "\"" + PollWrapper.manager.getPollID() + "\""
                 );
                 while (resultSet.first()) {
                     PollWrapper.manager.generatePIN();
                     resultSet = statement.executeQuery("SELECT * FROM vote WHERE " +
-                            "pin = " + "\"" + PollWrapper.manager.getPIN() + "\"" +
+                            "pin = " + "\"" + PollWrapper.manager.getPin() + "\"" +
                             "AND pollID = " + "\"" + PollWrapper.manager.getPollID() + "\""
                     );
                 }
@@ -65,7 +65,7 @@ public class SearchServlet extends HttpServlet {
                                 "VALUES (" +
                                 "\"" + PollWrapper.manager.getPollID() + "\", " +
                                 "\"" + request.getSession().getId() + "\", " +
-                                "\"" + PollWrapper.manager.getPIN() + "\"" +
+                                "\"" + PollWrapper.manager.getPin() + "\"" +
                                 ")"
                 );
                 DBConnection.closeConnection();
@@ -80,7 +80,7 @@ public class SearchServlet extends HttpServlet {
         PollWrapper.manager = new PollManager();
         DBConnection.getConnection();
         try {
-            Statement statement = DBConnection.conn.createStatement();
+            Statement statement = DBConnection.connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM poll WHERE pollID = " + "\"" + pollID + "\"");
             LinkedList<Choice> choicesTemp = new LinkedList<>();
             String tempName = "";
@@ -116,7 +116,7 @@ public class SearchServlet extends HttpServlet {
                 );
                 PollWrapper.manager.setPollID(tempPollID);
                 PollWrapper.manager.setStatus(PollStatus.RUNNING);
-                PreparedStatement preparedStatement = DBConnection.conn.prepareStatement("SELECT * FROM vote WHERE pollID = ?");
+                PreparedStatement preparedStatement = DBConnection.connection.prepareStatement("SELECT * FROM vote WHERE pollID = ?");
                 preparedStatement.setString(1, PollWrapper.manager.getPollID());
                 resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {

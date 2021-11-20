@@ -62,7 +62,7 @@ public class PollManager {
         return this.question;
     }
 
-    public String getTime() {
+    public String getDate() {
         date = LocalDateTime.now();
         return date.format(formatter);
     }
@@ -75,11 +75,11 @@ public class PollManager {
         this.pollID = pollID;
     }
 
-    public String getPIN(){
+    public String getPin(){
         return this.pin;
     }
 
-    public void setPIN(String pin){
+    public void setPin(String pin){
         this.pin = pin;
     }
 

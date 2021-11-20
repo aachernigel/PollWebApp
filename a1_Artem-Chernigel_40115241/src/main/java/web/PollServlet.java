@@ -10,11 +10,9 @@ import javax.servlet.annotation.*;
 import java.io.*;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 
-@WebServlet(name = "Servlet", value = "/Servlet")
-public class Servlet extends HttpServlet {
+@WebServlet(name = "PollServlet", value = "/PollServlet")
+public class PollServlet extends HttpServlet {
     private final String FORMATS = ".txt.json.xml";
 
     @Override
@@ -27,7 +25,7 @@ public class Servlet extends HttpServlet {
                 System.err.println("ERROR: Download format does not match in doGet");
                 response.sendRedirect("home.jsp");
             } else {
-                String filename = PollWrapper.manager.getName() + "-" + PollWrapper.manager.getTime() + request.getParameter("pollFormatDownload");
+                String filename = PollWrapper.manager.getName() + "-" + PollWrapper.manager.getDate() + request.getParameter("pollFormatDownload");
                 ServletOutputStream out = response.getOutputStream();
                 PrintWriter pw;
                 response.addHeader("Content-Disposition",
@@ -81,7 +79,7 @@ public class Servlet extends HttpServlet {
                     );
                     DBConnection.getConnection();
                     try {
-                        Statement statement = DBConnection.conn.createStatement();
+                        Statement statement = DBConnection.connection.createStatement();
                         statement.executeUpdate(
                                 "INSERT INTO poll(pollID, name, question, status, creatorID, " + columnsStr + ") VALUES (" +
                                         "\"" + PollWrapper.manager.getPollID() + "\"" +
@@ -161,12 +159,12 @@ public class Servlet extends HttpServlet {
                     try {
                         DBConnection.getConnection();
                         try {
-                            PreparedStatement preparedStatement = DBConnection.conn.prepareStatement("SELECT * FROM vote WHERE sessionID = ? AND pollID = ?");
+                            PreparedStatement preparedStatement = DBConnection.connection.prepareStatement("SELECT * FROM vote WHERE sessionID = ? AND pollID = ?");
                             preparedStatement.setString(1, request.getSession().getId());
                             preparedStatement.setString(2, PollWrapper.manager.getPollID());
                             ResultSet rsSessionIDAndPollID = preparedStatement.executeQuery();
 
-                            preparedStatement = DBConnection.conn.prepareStatement("SELECT * FROM vote WHERE pollID = ?");
+                            preparedStatement = DBConnection.connection.prepareStatement("SELECT * FROM vote WHERE pollID = ?");
                             preparedStatement.setString(1, PollWrapper.manager.getPollID());
                             ResultSet rsPollID = preparedStatement.executeQuery();
                             boolean foundPIN = false;
@@ -186,7 +184,7 @@ public class Servlet extends HttpServlet {
                                     DBPollGateway.dbPoll.insertVote(
                                             PollWrapper.manager.getPollID(),
                                             request.getSession().getId(),
-                                            PollWrapper.manager.getPIN(),
+                                            PollWrapper.manager.getPin(),
                                             PollWrapper.manager.getChoices()[i].getDescription(),
                                             LocalDateTime.now()
                                     );
@@ -208,7 +206,7 @@ public class Servlet extends HttpServlet {
                                     System.out.println("Processing a Vote with the pre-generated PIN!");
                                     DBPollGateway.dbPoll.updateVote(
                                             PollWrapper.manager.getPollID(),
-                                            PollWrapper.manager.getPIN(),
+                                            PollWrapper.manager.getPin(),
                                             PollWrapper.manager.getChoices()[i].getDescription(),
                                             LocalDateTime.now()
                                     );

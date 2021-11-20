@@ -8,13 +8,13 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <script type="text/javascript" src="scripts/script.js"></script>
-    <title>Home</title>
+    <title>Poll</title>
 </head>
 <body id="homePage">
 <div class="loginDiv">
     <form action="SearchServlet" method="get">
         <input type="text" name="pinInput" id="pinInput" placeholder="Your PIN# will be here"
-               value="<%=PollWrapper.manager.getPIN() == null ? "" : PollWrapper.manager.getPIN()%>">
+               value="<%=PollWrapper.manager.getPin() == null ? "" : PollWrapper.manager.getPin()%>">
         <button type="submit" name="requestPIN#" id="requestPIN#">
             Request PIN#
         </button>

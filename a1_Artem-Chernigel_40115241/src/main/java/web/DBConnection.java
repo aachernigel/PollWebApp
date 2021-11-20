@@ -13,7 +13,7 @@ public class DBConnection {
     static String DB_NAME = null;
     static String DB_USER = null;
     static String DB_PASSWORD = null;
-    public static Connection conn = null;
+    public static Connection connection = null;
 
     public static Connection getConnection(){
         Properties properties = new Properties();
@@ -27,7 +27,7 @@ public class DBConnection {
             DB_USER = properties.getProperty("db_user");
             DB_PASSWORD = properties.getProperty("db_password");
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL + DB_NAME, DB_USER, DB_PASSWORD);
+            connection = DriverManager.getConnection(DB_URL + DB_NAME, DB_USER, DB_PASSWORD);
         } catch(SQLException e){
             throw new RuntimeException("Error connecting to database", e);
         } catch(ClassNotFoundException e){
@@ -45,11 +45,11 @@ public class DBConnection {
                 }
             }
         }
-        return conn;
+        return connection;
     }
 
     public static void closeConnection() throws SQLException {
-        if(conn != null)
-            conn.close();
+        if(connection != null)
+            connection.close();
     }
 }

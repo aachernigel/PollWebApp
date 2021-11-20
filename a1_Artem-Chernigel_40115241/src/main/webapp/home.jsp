@@ -53,7 +53,7 @@
 %>
 <div class="pollMessage">
     <div class="innerDiv">
-        <form method="post" action="Servlet">
+        <form method="post" action="PollServlet">
             <h1><%= PollWrapper.manager.getName()%>
             </h1>
             <h2><%= PollWrapper.manager.getQuestion()%>
@@ -106,7 +106,7 @@
         </button>
         <p> Want to download the results of the Poll?
         </p>
-        <form action="Servlet" method="get">
+        <form action="PollServlet" method="get">
             <input type="hidden" name="pollNameDownload" value="<%=PollWrapper.manager.getName()%>">
             <label>In which format would you like to download the results?</label>
             <br/><br/>

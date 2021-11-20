@@ -1,0 +1,19 @@
+title Poll Data Download
+
+participant home.jsp
+participant PollServlet
+participant PollManager
+autoactivation on
+
+activate home.jsp
+home.jsp->PollServlet:Pass download format along with the request
+deactivate home.jsp
+home.jsp->PollServlet
+PollServlet->PollManager:Call PollManager method to download poll details
+PollServlet->PollServlet:Set appropriate headers and expiration
+PollManager->PollManager:Write poll data to servlet output stream \naccording to the download format
+deactivate PollServlet
+PollServlet->home.jsp:Start the download
+deactivate PollManager
+PollManager->PollServlet:Return servlet output stream with data
+deactivate PollServlet

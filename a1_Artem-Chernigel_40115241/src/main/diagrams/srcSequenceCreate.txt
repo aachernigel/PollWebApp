@@ -1,0 +1,43 @@
+title Create Poll
+
+participant home.jsp
+participant adminMenu.jsp
+participant numberOfOptionsPage.jsp
+participant createPollPage.jsp
+participant PollServlet
+participant PollWrapper
+participant PollManager
+participant DBPollGateway
+participant DBConnection
+autoactivation on
+
+activate home.jsp
+home.jsp->adminMenu.jsp:Access administrator menu
+adminMenu.jsp->numberOfOptionsPage.jsp:Click on Create Poll button
+numberOfOptionsPage.jsp->createPollPage.jsp:Pass the number of options chosen \nby user along with the request
+deactivate adminMenu.jsp
+deactivate home.jsp
+createPollPage.jsp->PollServlet:Pass poll data given by user\nalong with the request
+deactivate numberOfOptionsPage.jsp
+PollServlet->PollServlet:Verify if any of the input is null
+PollServlet->PollWrapper:Call PollManager method to create a new poll
+PollWrapper->PollManager:Call createPoll method\nof the singleton
+deactivate PollWrapper
+deactivate createPollPage.jsp
+deactivate PollServlet
+PollManager->PollManager:Update Status\nGenerate pollID\nCreate a poll with passed data
+deactivate PollServlet
+PollManager->PollServlet:Return created poll
+deactivate PollManager
+deactivate PollManager
+
+PollServlet->DBPollGateway:Call DBPollGateway method to update poll table of the database
+DBPollGateway->DBConnection:Request database\nconnection
+DBConnection->DBPollGateway:Return database\nconnection
+deactivate DBPollGateway
+DBPollGateway->DBPollGateway:Update poll table according to\nthe data of the PollManager
+DBPollGateway->PollServlet:Return control to PollServlet
+deactivate PollServlet
+deactivate DBPollGateway
+PollServlet->home.jsp:Redirect response to home.jsp
+home.jsp->home.jsp:Update view of the page

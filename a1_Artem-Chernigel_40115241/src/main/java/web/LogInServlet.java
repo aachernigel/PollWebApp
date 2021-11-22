@@ -27,7 +27,6 @@ import java.util.LinkedList;
 //      qwerty
 //      123
 public class LogInServlet extends HttpServlet {
-    private static int attempts = 3;
     private static String DECRYPTION_ALGORITHM = "MD5";
 
     @Override
@@ -44,7 +43,6 @@ public class LogInServlet extends HttpServlet {
             String hash = convertByteArrayToHexString(hashedBytes);
 
             JSONParser jsonParser = new JSONParser();
-            // Is it necessary to make a relative path?
             JSONObject jsonObject = (JSONObject) jsonParser.parse(new FileReader("C:\\Users\\Admin\\IdeaProjects\\PollWebApp\\a1_Artem-Chernigel_40115241\\src\\main\\webapp\\users\\userInfo.json"));
             JSONArray jsonArray = (JSONArray) jsonObject.get("users");
             LinkedList<JSONObject> users = new LinkedList<>();

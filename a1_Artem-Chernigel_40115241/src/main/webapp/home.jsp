@@ -13,7 +13,7 @@
 <body id="homePage">
 <div class="loginDiv">
     <form action="SearchServlet" method="get">
-        <input type="text" name="pinInput" id="pinInput" placeholder="Your PIN# will be here"
+        <input type="text" name="pinInput" id="pinInput" placeholder="Your PIN# will be here" readonly
                value="<%=PollWrapper.manager.getPin() == null ? "" : PollWrapper.manager.getPin()%>">
         <button type="submit" name="requestPIN#" id="requestPIN#">
             Request PIN#
@@ -27,6 +27,10 @@
             AdminFunctions
         </button>
     </form>
+    <script>
+        if(<%=request.getAttribute("disabledAdmin") != null && request.getAttribute("disabledAdmin").equals("true")%>)
+            alert("Sorry, you did not create this poll! You cannot access admin functions");
+    </script>
     <% } %>
     <button onclick="window.location.href='index.jsp'" id="homePageButton">
         Home
@@ -115,6 +119,7 @@
                 <option value=".json">.json</option>
                 <option value=".xml">.xml</option>
             </select>
+            <br/><br/>
             <button type="submit">
                 Download
             </button>

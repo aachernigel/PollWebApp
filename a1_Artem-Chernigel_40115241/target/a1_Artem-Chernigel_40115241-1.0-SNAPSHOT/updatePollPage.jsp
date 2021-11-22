@@ -43,7 +43,7 @@
     </span>
         </label>
         <div id="showForm" class="divUpdate">
-            <form action="Servlet" method="get">
+            <form action="PollServlet" method="get">
                 <div id="secondInnerDiv">
                     <input type="text" value="" id="pollNameUpdate" name="pollNameUpdate" required="true">
                     <label for="pollNameUpdate">Please enter the poll name:</label><br/>
@@ -69,7 +69,7 @@
         </div>
         <div id="showMessage" class="divUpdate">
             <p>Then just click on the button below to update the Poll!</p>
-            <form action="Servlet" method="get">
+            <form action="PollServlet" method="get">
                 <input type="hidden" name="doNotChangeValuesUpdate" id="doNotChangeValuesUpdate" value="true">
                 <button type="submit">
                     Update

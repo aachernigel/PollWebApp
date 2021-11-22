@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <script type="text/javascript" src="scripts/script.js"></script>
-    <title>Search</title>
+    <title>Home</title>
 </head>
 <body onload="checkIfLoggedIn();" id="indexPage">
 <script type="text/javascript">

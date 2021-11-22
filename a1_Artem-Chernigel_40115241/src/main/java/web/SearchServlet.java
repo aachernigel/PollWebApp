@@ -31,7 +31,7 @@ public class SearchServlet extends HttpServlet {
         if (ids.contains(request.getParameter("pollIDInput"))) {
             if (PollWrapper.manager.getStatus() != null)
                 PollWrapper.manager = new PollManager();
-            if(initializePoll(request.getParameter("pollIDInput"), request.getSession().getAttribute("userID")))
+            if (initializePoll(request.getParameter("pollIDInput"), request.getSession().getAttribute("userID"), request.getSession().getId()))
                 response.sendRedirect("home.jsp");
             else
                 response.sendRedirect("index.jsp");
@@ -45,38 +45,55 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (PollWrapper.manager.getPin() == null) {
-            PollWrapper.manager.generatePIN();
             DBConnection.getConnection();
+            boolean generate = false;
             try {
-                Statement statement = DBConnection.connection.createStatement();
-                ResultSet resultSet = statement.executeQuery("SELECT * FROM vote WHERE " +
-                        "pin = " + "\"" + PollWrapper.manager.getPin() + "\"" +
-                        "AND pollID = " + "\"" + PollWrapper.manager.getPollID() + "\""
+                PreparedStatement pinPreparedStatement = DBConnection.connection.prepareStatement(
+                        "SELECT pin FROM vote WHERE pollID = ? AND sessionID = ?"
                 );
-                while (resultSet.first()) {
-                    PollWrapper.manager.generatePIN();
-                    resultSet = statement.executeQuery("SELECT * FROM vote WHERE " +
+                pinPreparedStatement.setString(1, PollWrapper.manager.getPollID());
+                pinPreparedStatement.setString(2, (String) request.getSession().getId());
+                ResultSet pinResultSet = pinPreparedStatement.executeQuery();
+                if (pinResultSet.next())
+                    PollWrapper.manager.setPin(pinResultSet.getString("pin"));
+                else
+                    generate = true;
+            } catch (SQLException e) {
+                System.err.println(e);
+            }
+            if (generate) {
+                PollWrapper.manager.generatePIN();
+                try {
+                    Statement statement = DBConnection.connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery("SELECT * FROM vote WHERE " +
                             "pin = " + "\"" + PollWrapper.manager.getPin() + "\"" +
                             "AND pollID = " + "\"" + PollWrapper.manager.getPollID() + "\""
                     );
+                    while (resultSet.first()) {
+                        PollWrapper.manager.generatePIN();
+                        resultSet = statement.executeQuery("SELECT * FROM vote WHERE " +
+                                "pin = " + "\"" + PollWrapper.manager.getPin() + "\"" +
+                                "AND pollID = " + "\"" + PollWrapper.manager.getPollID() + "\""
+                        );
+                    }
+                    statement.executeUpdate(
+                            "INSERT INTO vote (pollID, sessionID, pin) " +
+                                    "VALUES (" +
+                                    "\"" + PollWrapper.manager.getPollID() + "\", " +
+                                    "\"" + request.getSession().getId() + "\", " +
+                                    "\"" + PollWrapper.manager.getPin() + "\"" +
+                                    ")"
+                    );
+                    DBConnection.closeConnection();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-                statement.executeUpdate(
-                        "INSERT INTO vote (pollID, sessionID, pin) " +
-                                "VALUES (" +
-                                "\"" + PollWrapper.manager.getPollID() + "\", " +
-                                "\"" + request.getSession().getId() + "\", " +
-                                "\"" + PollWrapper.manager.getPin() + "\"" +
-                                ")"
-                );
-                DBConnection.closeConnection();
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
         }
         response.sendRedirect("home.jsp");
     }
 
-    private boolean initializePoll(String pollID, Object sessionID) {
+    private boolean initializePoll(String pollID, Object userID, Object sessionID) {
         PollWrapper.manager = new PollManager();
         DBConnection.getConnection();
         try {
@@ -97,11 +114,11 @@ public class SearchServlet extends HttpServlet {
                 tempStatus = resultSet.getString("status");
                 tempCreatorID = resultSet.getString("creatorID");
             }
-            if(tempStatus.equals((PollStatus.CLOSED).toString())){
-                if(sessionID == null){
+            if (tempStatus.equals((PollStatus.CLOSED).toString())) {
+                if (userID == null) {
                     // since only the user who created it can see it
                     return false;
-                } else if(!((String) sessionID).equals(tempCreatorID)){
+                } else if (!((String) userID).equals(tempCreatorID)) {
                     // since only the user who created it can see it
                     return false;
                 }
@@ -123,7 +140,6 @@ public class SearchServlet extends HttpServlet {
                     for (int i = 0; i < PollWrapper.manager.getChoices().length; i++) {
                         if (resultSet.getString("choice") != null &&
                                 resultSet.getString("choice").equals(PollWrapper.manager.getChoices()[i].getDescription())) {
-
                             String date = resultSet.getString("dateTime").split(" ")[0];
                             String time = resultSet.getString("dateTime").split(" ")[1];
                             PollWrapper.manager.Vote(
@@ -157,6 +173,16 @@ public class SearchServlet extends HttpServlet {
                             break;
                     }
                 }
+                PreparedStatement pinPreparedStatement = DBConnection.connection.prepareStatement(
+                        "SELECT pin FROM vote WHERE pollID = ? AND sessionID = ?"
+                );
+                pinPreparedStatement.setString(1, PollWrapper.manager.getPollID());
+                pinPreparedStatement.setString(2, (String) sessionID);
+                ResultSet pinResultSet = pinPreparedStatement.executeQuery();
+                if (pinResultSet.next())
+                    PollWrapper.manager.setPin(pinResultSet.getString("pin"));
+                else
+                    PollWrapper.manager.setPin(null);
             } catch (PollException pe) {
                 System.err.println(pe);
             }

@@ -8,13 +8,13 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <script type="text/javascript" src="scripts/script.js"></script>
-    <title>Home</title>
+    <title>Poll</title>
 </head>
 <body id="homePage">
 <div class="loginDiv">
     <form action="SearchServlet" method="get">
-        <input type="text" name="pinInput" id="pinInput" placeholder="Your PIN# will be here"
-               value="<%=PollWrapper.manager.getPIN() == null ? "" : PollWrapper.manager.getPIN()%>">
+        <input type="text" name="pinInput" id="pinInput" placeholder="Your PIN# will be here" readonly
+               value="<%=PollWrapper.manager.getPin() == null ? "" : PollWrapper.manager.getPin()%>">
         <button type="submit" name="requestPIN#" id="requestPIN#">
             Request PIN#
         </button>
@@ -27,6 +27,10 @@
             AdminFunctions
         </button>
     </form>
+    <script>
+        if(<%=request.getAttribute("disabledAdmin") != null && request.getAttribute("disabledAdmin").equals("true")%>)
+            alert("Sorry, you did not create this poll! You cannot access admin functions");
+    </script>
     <% } %>
     <button onclick="window.location.href='index.jsp'" id="homePageButton">
         Home
@@ -53,7 +57,7 @@
 %>
 <div class="pollMessage">
     <div class="innerDiv">
-        <form method="post" action="Servlet">
+        <form method="post" action="PollServlet">
             <h1><%= PollWrapper.manager.getName()%>
             </h1>
             <h2><%= PollWrapper.manager.getQuestion()%>
@@ -106,7 +110,7 @@
         </button>
         <p> Want to download the results of the Poll?
         </p>
-        <form action="Servlet" method="get">
+        <form action="PollServlet" method="get">
             <input type="hidden" name="pollNameDownload" value="<%=PollWrapper.manager.getName()%>">
             <label>In which format would you like to download the results?</label>
             <br/><br/>
@@ -115,6 +119,7 @@
                 <option value=".json">.json</option>
                 <option value=".xml">.xml</option>
             </select>
+            <br/><br/>
             <button type="submit">
                 Download
             </button>

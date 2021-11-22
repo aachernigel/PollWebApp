@@ -21,7 +21,6 @@ public class AccessAdminServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DBConnection.getConnection();
         try {
-            // set a parameter to inform a user that he cannot use admin functions for this poll
             PreparedStatement preparedStatement = DBConnection.connection.prepareStatement("SELECT pollID FROM poll WHERE creatorID = ?");
             preparedStatement.setString(1, (String) request.getSession().getAttribute("userID"));
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -31,8 +30,10 @@ public class AccessAdminServlet extends HttpServlet {
                     found = true;
                     response.sendRedirect("adminMenu.jsp");
                 }
-            if (!found)
-                response.sendRedirect("home.jsp");
+            if (!found){
+                request.setAttribute("disabledAdmin", "true");
+                request.getRequestDispatcher("home.jsp").forward(request, response);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

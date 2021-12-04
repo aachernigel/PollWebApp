@@ -27,7 +27,7 @@ import java.util.LinkedList;
 //      qwerty
 //      123
 public class LogInServlet extends HttpServlet {
-    private static String DECRYPTION_ALGORITHM = "MD5";
+    protected static String DECRYPTION_ALGORITHM = "MD5";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -74,7 +74,7 @@ public class LogInServlet extends HttpServlet {
         }
     }
 
-    private static String convertByteArrayToHexString(byte[] arrayBytes) {
+    protected static String convertByteArrayToHexString(byte[] arrayBytes) {
         StringBuffer stringBuffer = new StringBuffer();
         for (int i = 0; i < arrayBytes.length; i++) {
             stringBuffer.append(Integer.toString((arrayBytes[i] & 0xff) + 0x100, 16)

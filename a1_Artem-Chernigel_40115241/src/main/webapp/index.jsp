@@ -32,7 +32,7 @@
                 </form>
             </td>
             <td>
-                <button onclick="alert('The feature is not implemented yet!')" id="registerButton"
+                <button onclick="window.location.href='register.jsp'" id="registerButton"
                         class="functionButton">
                     Register
                 </button>

@@ -8,6 +8,7 @@
     <title>Register</title>
 </head>
 <body>
+<% if (request.getAttribute("registered") == null) {%>
 <form action="RegisterServlet" method="post">
     <div class="pollMessage">
         <div class="innerDiv" id="loginInnerDiv">
@@ -27,5 +28,19 @@
         </div>
     </div>
 </form>
+<% } else if (request.getAttribute("registered").equals("true")) {%>
+<div class="pollMessage">
+    <div class="innerDiv" id="searchInnerDiv">
+        <p>
+            Thank you for registering your account with us! <br/>
+            We just sent you a link to your email to verify your account! <br/>
+            Meanwhile, you can access the home page using the button below :) <br/>
+        </p>
+        <button onclick="window.location.href = 'index.jsp'">
+            Home
+        </button>
+    </div>
+</div>
+<% } %>
 </body>
 </html>

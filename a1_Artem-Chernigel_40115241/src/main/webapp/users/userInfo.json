@@ -4,6 +4,8 @@
         "lastName": "Swainston",
         "emailAddress": "rswainston0@baidu.com",
         "password": "52c88bca7c5b3ab3e7ed8901ea1bc83f",
+        "verificationToken": "6663023629",
+        "verified": "true",
         "userID": "968"
     },
     {
@@ -11,6 +13,8 @@
         "lastName": "MacMakin",
         "emailAddress": "nmacmakin3@wikimedia.org",
         "password": "d8578edf8458ce06fbc5bb76a58c5ca4",
+        "verificationToken": "5079060283",
+        "verified": "true",
         "userID": "638"
     },
     {
@@ -18,13 +22,17 @@
         "lastName": "Dillinton",
         "emailAddress": "bdillintonc@shop-pro.jp",
         "password": "202cb962ac59075b964b07152d234b70",
+        "verificationToken": "5672471845",
+        "verified": "true",
         "userID": "862"
     },
     {
         "firstName": "Artem",
         "lastName": "Chernigel",
         "emailAddress": "aachernigel@gmail.com",
-        "password": "92eb5ffee6ae2fec3ad71c777531578f",
+        "password": "28719ff71216fa1731fc97cafc526a09",
+        "verificationToken": "0088161724",
+        "verified": "true",
         "userID": "777"
     }
 ]}

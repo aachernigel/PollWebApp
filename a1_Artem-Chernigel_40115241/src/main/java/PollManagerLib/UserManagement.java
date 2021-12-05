@@ -1,5 +1,6 @@
 package PollManagerLib;
 
+import userManagement.EmailType;
 import userManagement.User;
 
 public interface UserManagement {
@@ -8,7 +9,7 @@ public interface UserManagement {
 
     boolean forgotPassword();
 
-    boolean emailVerification();
+    boolean emailVerification(String userID, String verificationToken);
 
     boolean changePassword();
 

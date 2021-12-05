@@ -1,8 +1,7 @@
 package web;
 
-import PollManagerLib.UserManager;
-import userManagement.PollUserManager;
-import userManagement.User;
+import PollManagerLib.PluginManager;
+import userManagement.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -37,8 +36,13 @@ public class RegisterServlet extends HttpServlet {
                 request.getParameter("emailAddressRegister"),
                 hashedPassword
         );
-        UserManager userManager = new UserManager(new PollUserManager());
+        user.generateVerificationToken();
+        PollPluginFactory pollPluginFactory = new PollPluginFactory();
+        PluginManager userManager = pollPluginFactory.getPlugin(PollUserManager.class);
+        PluginManager emailManager = pollPluginFactory.getPlugin(EmailGateway.class);
         userManager.getUserManagement().signUp(user);
-        response.sendRedirect("index.jsp");
+        emailManager.getEmailManagement().sendEmail(user, EmailType.ACCOUNT_CREATION);
+        request.setAttribute("registered", "true");
+        request.getRequestDispatcher("register.jsp").forward(request, response);
     }
 }

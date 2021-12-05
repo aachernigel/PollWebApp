@@ -1,9 +1,5 @@
 package web;
 
-import PollManagerLib.PollException;
-import PollManagerLib.PollManager;
-import PollManagerLib.PollWrapper;
-import com.google.protobuf.Message;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,11 +10,9 @@ import javax.servlet.annotation.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 @WebServlet(name = "LogInServlet", value = "/LogInServlet")

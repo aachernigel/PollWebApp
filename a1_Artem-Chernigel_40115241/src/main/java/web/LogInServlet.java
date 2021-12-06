@@ -3,6 +3,7 @@ package web;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import userManagement.Encryptor;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -10,8 +11,6 @@ import javax.servlet.annotation.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 
@@ -32,9 +31,7 @@ public class LogInServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            MessageDigest digest = MessageDigest.getInstance(DECRYPTION_ALGORITHM);
-            byte[] hashedBytes = digest.digest(request.getParameter("passwordLogIn").getBytes(StandardCharsets.UTF_8));
-            String hash = convertByteArrayToHexString(hashedBytes);
+            String hash =  Encryptor.getEncryption(request.getParameter("passwordLogIn"));
 
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = (JSONObject) jsonParser.parse(new FileReader("C:\\Users\\Admin\\IdeaProjects\\PollWebApp\\a1_Artem-Chernigel_40115241\\src\\main\\webapp\\users\\userInfo.json"));
@@ -43,24 +40,41 @@ public class LogInServlet extends HttpServlet {
             for (int i = 0; i < jsonArray.size(); i++)
                 users.add((JSONObject) jsonArray.get(i));
             boolean authentication = false;
+            boolean verified = false;
+            boolean active = false;
 
             for (JSONObject u : users) {
                 if (u.get("userID").equals(request.getParameter("userIDLogIn")) &&
-                        u.get("password").equals(hash))
+                        u.get("password").equals(hash)){
+                    if(u.get("verified").equals("true")){
+                        verified = true;
+                    } else{
+                        verified = false;
+                    }
+                    if(u.get("active").equals("true")){
+                        active = true;
+                    } else {
+                        active = false;
+                    }
                     authentication = true;
+                }
             }
-            if (authentication) {
+            if (authentication && verified && active) {
                 HttpSession session = request.getSession(true);
                 String userID = request.getParameter("userIDLogIn");
                 session.setAttribute("userID", userID);
                 response.sendRedirect("index.jsp");
             } else {
-                request.setAttribute("error", "User-ID or Password does not match!");
+                if(!authentication){
+                    request.setAttribute("error", "User-ID or Password does not match!");
+                } else if(!verified) {
+                    request.setAttribute("error", "Please verify your account first!");
+                } else if(!active) {
+                    request.setAttribute("error", "Please change your password first with the token provided previously!");
+                }
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
 
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -68,7 +82,7 @@ public class LogInServlet extends HttpServlet {
         }
     }
 
-    protected static String convertByteArrayToHexString(byte[] arrayBytes) {
+    public static String convertByteArrayToHexString(byte[] arrayBytes) {
         StringBuffer stringBuffer = new StringBuffer();
         for (int i = 0; i < arrayBytes.length; i++) {
             stringBuffer.append(Integer.toString((arrayBytes[i] & 0xff) + 0x100, 16)

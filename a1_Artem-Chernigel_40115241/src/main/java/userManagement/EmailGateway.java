@@ -44,7 +44,14 @@ public class EmailGateway implements EmailManagement {
                                 + user.getUserID() + "&verificationToken=" + user.getVerificationToken()
                 );
             } else if (emailType == EmailType.FORGOT_PASSWORD) {
-                // TODO
+                message.setSubject("Forgot Password");
+                message.setText(
+                        "Hey, " + user.getFirstName() + " " + user.getLastName() + "!\n" +
+                                "\tWe are sorry to hear that you forgot your password. But do not worry, we got you!\n" +
+                                "\tPlease click on the link below in order to restore your password:\n" +
+                                "http://localhost:8978/a1_Artem_Chernigel_40115241_war_exploded/ForgotPasswordServlet?userID="
+                                + user.getUserID() + "&changePasswordToken=" + user.getChangePasswordToken()
+                );
             }
             Transport.send(message);
         } catch (MessagingException e) {

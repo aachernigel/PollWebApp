@@ -21,6 +21,8 @@
             <button type="submit" id="submitLogIn">
                 Log In
             </button>
+            <br/>
+            <a href="forgotPasswordAction.jsp">Forgot password?</a>
             <p name="errorLogIn" id="errorLogIn">
                 <%=request.getAttribute("error") == null ? "" : request.getAttribute("error")%>
             </p>

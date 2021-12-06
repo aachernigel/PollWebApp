@@ -1,25 +1,27 @@
 package userManagement;
 
+import PollManagerLib.PluginManager;
 import PollManagerLib.UserManagement;
 import org.json.simple.JSONArray;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
-import java.util.Properties;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import web.LogInServlet;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 
 public class PollUserManager implements UserManagement {
+    private final static int TEMPORARY_PASSWORD_LENGTH = 13;
 
     @Override
     public boolean signUp(User user) {
-        boolean finished = false;
         try {
             LinkedList<JSONObject> users = getUsers("C:\\Users\\Admin\\IdeaProjects\\PollWebApp\\a1_Artem-Chernigel_40115241\\src\\main\\webapp\\users\\userInfo.json");
             for (JSONObject u : users) {
@@ -31,14 +33,10 @@ public class PollUserManager implements UserManagement {
             org.json.JSONObject resultJson = new org.json.JSONObject();
             org.json.JSONArray arrOfUsers = new org.json.JSONArray();
             for (JSONObject u : users) {
-                org.json.JSONObject userObj = new org.json.JSONObject();
-                userObj.put("userID", u.get("userID"));
-                userObj.put("firstName", u.get("firstName"));
-                userObj.put("lastName", u.get("lastName"));
-                userObj.put("emailAddress", u.get("emailAddress"));
-                userObj.put("password", u.get("password"));
-                userObj.put("verificationToken", u.get("verificationToken"));
+                org.json.JSONObject userObj = setUserValues(u);
                 userObj.put("verified", u.get("verified"));
+                userObj.put("active", u.get("active"));
+                userObj.put("changePasswordToken", u.get("changePasswordToken"));
                 arrOfUsers.put(userObj);
             }
             org.json.JSONObject newUser = new org.json.JSONObject();
@@ -49,6 +47,8 @@ public class PollUserManager implements UserManagement {
             newUser.put("password", user.getPassword());
             newUser.put("verificationToken", user.getVerificationToken());
             newUser.put("verified", "false");
+            newUser.put("active", "false");
+            newUser.put("changePasswordToken", "");
 
             arrOfUsers.put(newUser);
             resultJson.put("users", arrOfUsers);
@@ -57,47 +57,33 @@ public class PollUserManager implements UserManagement {
             output.write(resultJson.toString(4));
             output.flush();
             output.close();
-            finished = true;
         } catch (IOException | ParseException e) {
             System.err.println(e);
-        }
-        if (finished)
-            return true;
-        else
             return false;
+        }
+        return true;
     }
 
     @Override
-    public boolean forgotPassword() {
-        return false;
-    }
-
-    @Override
-    public boolean emailVerification(String userID, String verificationToken) {
-        boolean verified = false;
+    public boolean forgotPassword(User user) {
+        if (!user.getChangePasswordToken().equals(""))
+            return false;
+        user.generateChangePasswordToken();
         try {
             LinkedList<JSONObject> users = PollUserManager.getUsers("C:\\Users\\Admin\\IdeaProjects\\PollWebApp\\a1_Artem-Chernigel_40115241\\src\\main\\webapp\\users\\userInfo.json");
-            for (JSONObject u : users) {
-                if (u.get("userID").equals(userID) && u.get("verificationToken").equals(verificationToken)) {
-                    verified = true;
-                }
-            }
-            if (!verified)
-                return false;
+
             org.json.JSONObject resultJson = new org.json.JSONObject();
             org.json.JSONArray arrOfUsers = new org.json.JSONArray();
             for (JSONObject u : users) {
-                org.json.JSONObject userObj = new org.json.JSONObject();
-                userObj.put("userID", u.get("userID"));
-                userObj.put("firstName", u.get("firstName"));
-                userObj.put("lastName", u.get("lastName"));
-                userObj.put("emailAddress", u.get("emailAddress"));
-                userObj.put("password", u.get("password"));
-                userObj.put("verificationToken", u.get("verificationToken"));
-                if (u.get("userID").equals(userID) && verified)
-                    userObj.put("verified", "true");
-                else
-                    userObj.put("verified", u.get("verified"));
+                org.json.JSONObject userObj = setUserValues(u);
+                userObj.put("verified", u.get("verified"));
+                if (u.get("userID").equals(user.getUserID())) {
+                    userObj.put("active", "false");
+                    userObj.put("changePasswordToken", user.getChangePasswordToken());
+                } else {
+                    userObj.put("active", u.get("active"));
+                    userObj.put("changePasswordToken", u.get("changePasswordToken"));
+                }
                 arrOfUsers.put(userObj);
             }
             resultJson.put("users", arrOfUsers);
@@ -107,13 +93,103 @@ public class PollUserManager implements UserManagement {
             output.close();
         } catch (IOException | ParseException e) {
             System.err.println(e);
+            return false;
         }
         return true;
     }
 
     @Override
-    public boolean changePassword() {
-        return false;
+    public boolean emailVerification(String userID, String token, EmailType type, HttpServletRequest request) {
+        boolean verified = false;
+        String userPassword = "";
+        try {
+            LinkedList<JSONObject> users = PollUserManager.getUsers("C:\\Users\\Admin\\IdeaProjects\\PollWebApp\\a1_Artem-Chernigel_40115241\\src\\main\\webapp\\users\\userInfo.json");
+            for (JSONObject u : users) {
+                if (u.get("userID").equals(userID)) {
+                    if (type.equals(EmailType.ACCOUNT_CREATION)) {
+                        if (u.get("verificationToken").equals(token))
+                            verified = true;
+                    } else if (type.equals(EmailType.FORGOT_PASSWORD)) {
+                        if (u.get("changePasswordToken").equals(token))
+                            verified = true;
+                    }
+                }
+            }
+
+            if (!verified)
+                return false;
+
+            org.json.JSONObject resultJson = new org.json.JSONObject();
+            org.json.JSONArray arrOfUsers = new org.json.JSONArray();
+            for (JSONObject u : users) {
+                org.json.JSONObject userObj = setUserValues(u);
+                userObj.put("changePasswordToken", u.get("changePasswordToken"));
+                if (type.equals(EmailType.ACCOUNT_CREATION)) {
+                    if (u.get("userID").equals(userID) && verified) {
+                        userObj.put("verified", "true");
+                        userObj.put("active", "true");
+                    } else {
+                        userObj.put("verified", u.get("verified"));
+                        userObj.put("active", u.get("active"));
+                    }
+                } else if (type.equals(EmailType.FORGOT_PASSWORD)) {
+                    userObj.put("verified", u.get("verified"));
+                    if (u.get("userID").equals(userID)) {
+                        userPassword = createTemporaryPassword();
+
+                        String hash = Encryptor.getEncryption(userPassword);
+
+                        userObj.put("active", "true");
+                        userObj.remove("password");
+                        userObj.put("password", hash);
+
+                        request.setAttribute("password", userPassword);
+                    } else {
+                        userObj.put("active", u.get("active"));
+                    }
+                }
+
+                arrOfUsers.put(userObj);
+            }
+            resultJson.put("users", arrOfUsers);
+            FileWriter output = new FileWriter("C:\\Users\\Admin\\IdeaProjects\\PollWebApp\\a1_Artem-Chernigel_40115241\\src\\main\\webapp\\users\\userInfo.json");
+            output.write(resultJson.toString(4));
+            output.flush();
+            output.close();
+        } catch (IOException | ParseException e) {
+            System.err.println(e);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean changePassword(User user) {
+        try {
+            LinkedList<JSONObject> users = getUsers("C:\\Users\\Admin\\IdeaProjects\\PollWebApp\\a1_Artem-Chernigel_40115241\\src\\main\\webapp\\users\\userInfo.json");
+            org.json.JSONObject resultJson = new org.json.JSONObject();
+            org.json.JSONArray arrOfUsers = new org.json.JSONArray();
+            for (JSONObject u : users) {
+                org.json.JSONObject userObj = setUserValues(u);
+                userObj.put("verified", u.get("verified"));
+                userObj.put("active", u.get("active"));
+                userObj.put("changePasswordToken", u.get("changePasswordToken"));
+                if (u.get("userID").equals(user.getUserID())) {
+                    userObj.remove("password");
+                    userObj.put("password", user.getPassword());
+                }
+                arrOfUsers.put(userObj);
+            }
+            resultJson.put("users", arrOfUsers);
+            FileWriter output = new FileWriter("C:\\Users\\Admin\\IdeaProjects\\PollWebApp\\a1_Artem-Chernigel_40115241\\src\\main\\webapp\\users\\userInfo.json");
+            output.write(resultJson.toString(4));
+            output.flush();
+            output.close();
+        } catch (IOException | ParseException e) {
+            System.err.println(e);
+            return false;
+        }
+        return true;
     }
 
     public static LinkedList<JSONObject> getUsers(String filename) throws IOException, ParseException {
@@ -124,5 +200,28 @@ public class PollUserManager implements UserManagement {
         for (int i = 0; i < jsonArray.size(); i++)
             users.add((JSONObject) jsonArray.get(i));
         return users;
+    }
+
+    // Sets the values that do not need an extra if statement
+    public static org.json.JSONObject setUserValues(JSONObject u) {
+        org.json.JSONObject userObj = new org.json.JSONObject();
+        userObj.put("userID", u.get("userID"));
+        userObj.put("firstName", u.get("firstName"));
+        userObj.put("lastName", u.get("lastName"));
+        userObj.put("emailAddress", u.get("emailAddress"));
+        userObj.put("password", u.get("password"));
+        userObj.put("verificationToken", u.get("verificationToken"));
+        return userObj;
+    }
+
+    private String createTemporaryPassword() {
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_!";
+        String temporaryPassword = "";
+        int randomIndex;
+        for (int i = 0; i < TEMPORARY_PASSWORD_LENGTH; i++) {
+            randomIndex = (int) (Math.random() * alphabet.length());
+            temporaryPassword += alphabet.charAt(randomIndex);
+        }
+        return temporaryPassword;
     }
 }

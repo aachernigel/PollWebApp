@@ -2,7 +2,7 @@ package userManagement;
 
 
 public class User {
-    private static final int VERIFICATION_TOKEN_LENGTH = 10;
+    private static final int TOKEN_LENGTH = 10;
 
     private String userID;
     private String firstName;
@@ -10,6 +10,7 @@ public class User {
     private String emailAddress;
     private String password;
     private String verificationToken;
+    private String changePasswordToken;
 
     public User(String userID, String firstName, String lastName, String emailAddress, String password) {
         this.userID = userID;
@@ -62,9 +63,24 @@ public class User {
 
     public void generateVerificationToken() {
         String verificationToken = "";
-        for (int i = 0; i < VERIFICATION_TOKEN_LENGTH; i++)
-            verificationToken += (int) (Math.random() * VERIFICATION_TOKEN_LENGTH);
+        for (int i = 0; i < TOKEN_LENGTH; i++)
+            verificationToken += (int) (Math.random() * TOKEN_LENGTH);
         this.verificationToken = verificationToken;
+    }
+
+    public void generateChangePasswordToken(){
+        String changePasswordToken = "";
+        for (int i = 0; i < TOKEN_LENGTH; i++)
+            changePasswordToken += (int) (Math.random() * TOKEN_LENGTH);
+        this.changePasswordToken = changePasswordToken;
+    }
+
+    public String getChangePasswordToken(){
+        return this.changePasswordToken;
+    }
+
+    public void setChangePasswordToken(String changePasswordToken){
+        this.changePasswordToken = changePasswordToken;
     }
 
     public String getVerificationToken() {

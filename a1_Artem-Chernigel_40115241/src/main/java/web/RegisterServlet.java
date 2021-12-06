@@ -21,14 +21,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String hashedPassword = "";
-        try{
-            MessageDigest digest = MessageDigest.getInstance(LogInServlet.DECRYPTION_ALGORITHM);
-            byte[] hashedBytes = digest.digest(request.getParameter("passwordRegister").getBytes(StandardCharsets.UTF_8));
-            hashedPassword = LogInServlet.convertByteArrayToHexString(hashedBytes);
-        } catch (NoSuchAlgorithmException e){
-            System.err.println(e);
-        }
-
+        hashedPassword = Encryptor.getEncryption(request.getParameter("passwordRegister"));
         User user = new User(
                 request.getParameter("userIDRegister"),
                 request.getParameter("firstNameRegister"),

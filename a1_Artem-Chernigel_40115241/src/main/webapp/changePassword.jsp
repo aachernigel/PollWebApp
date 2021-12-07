@@ -7,10 +7,10 @@
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <title>Change Password</title>
 </head>
-<body>
+<body id="forgotPasswordPage">
 <% if(request.getAttribute("passwordChanged") == null) {%>
 <div class="pollMessage">
-    <div class="innerDiv">
+    <div class="forgotPasswordInnerDiv">
         <form action="ChangePasswordServlet" method="post">
             <label for="userIDChangePassword" id="userIDChangePasswordLabel">User ID:</label><br/>
             <input type="text" id="userIDChangePassword" name="userIDChangePassword"><br/>
@@ -29,7 +29,7 @@
 </div>
 <% } else if ((Boolean) request.getAttribute("passwordChanged")) {%>
 <div class="pollMessage">
-    <div class="innerDiv">
+    <div class="forgotPasswordInnerDiv">
         <p>
             Done! You successfully changed your password :) <br/>
             You can go to the home page using the button below!
@@ -37,11 +37,12 @@
         <button type="submit" onclick="window.location.href='index.jsp'">
             Home
         </button>
+        <br/><br/><br/>
     </div>
 </div>
 <% } else {%>
 <div class="pollMessage">
-    <div class="innerDiv">
+    <div class="forgotPasswordInnerDiv">
         <p>
             Oops! Something went completely wrong... <br/>
             Please try to change your password one more time!
@@ -49,6 +50,7 @@
         <button type="submit" onclick="window.location.href='index.jsp'">
             Home
         </button>
+        <br/><br/><br/>
     </div>
 </div>
 <% }%>

@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <title>Email Verification</title>
 </head>
-<body>
+<body id="registerPage">
 
 <% if(request.getAttribute("accountIsVerified") == null) {%>
 <div class="pollMessage">
@@ -26,7 +26,7 @@
     <div class="innerDiv">
         <p>
             Thank you so much for verifying your account! <br/>
-            You can go to the home page using the button below!
+            You can now go ahead and log in!
         </p>
         <button type="submit" onclick="window.location.href='index.jsp'">
             Home

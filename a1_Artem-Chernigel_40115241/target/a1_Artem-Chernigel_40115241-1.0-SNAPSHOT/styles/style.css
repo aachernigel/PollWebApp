@@ -26,8 +26,16 @@
     background-image: url("../images/cave.gif");
 }
 
-#listOfPollsPage{
+#listOfPollsPage {
     background-image: url("../images/galaxy.gif");
+}
+
+#registerPage {
+    background-image: url("../images/street3.gif");
+}
+
+#forgotPasswordPage {
+    background-image: url("../images/room2.gif");
 }
 
 .functionsMenu {
@@ -187,7 +195,7 @@ select:hover {
     margin-top: 50px;
 }
 
-.listOfPollsMessage{
+.listOfPollsMessage {
     display: flex;
     flex-direction: column;
     /*justify-content: center;*/
@@ -206,6 +214,18 @@ select:hover {
     border-radius: 5px;
     width: 400px;
     padding: 30px;
+}
+
+.forgotPasswordInnerDiv {
+    box-shadow: 4px 3px 8px 1px #969696;
+    background-color: lightgray;
+    opacity: 0.8;
+    border-radius: 5px;
+    width: 400px;
+    padding: 30px;
+    margin-top: 125px;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .listOfPollsInnerDiv {
@@ -281,7 +301,7 @@ select:hover {
 }
 
 #loginInnerDiv {
-    margin-top: 150px;
+    margin-top: 125px;
     margin-bottom: 0;
     padding-bottom: 0;
 }
@@ -420,11 +440,40 @@ body {
     padding-right: 110px;
 }
 
-#userIDLogInLabel, #pollIDLoginLabel {
+#userIDLogInLabel, #pollIDLoginLabel,
+#userIDForgotPasswordLabel, #userIDRegisterLabel, #userIDChangePasswordLabel {
     color: #061a3d;
     font-weight: bold;
     font-size: 18px;
     padding-right: 130px;
+}
+
+#firstNameRegisterLabel, #lastNameRegisterLabel {
+    color: #061a3d;
+    font-weight: bold;
+    font-size: 18px;
+    padding-right: 100px;
+}
+
+#emailAddressRegisterLabel, #newPasswordChangePasswordLabel {
+    color: #061a3d;
+    font-weight: bold;
+    font-size: 18px;
+    padding-right: 70px;
+}
+
+#prevPasswordChangePasswordLabel {
+    color: #061a3d;
+    font-weight: bold;
+    font-size: 18px;
+    padding-right: 30px;
+}
+
+#passwordRegisterLabel {
+    color: #061a3d;
+    font-weight: bold;
+    font-size: 18px;
+    padding-right: 110px;
 }
 
 #searchButton {

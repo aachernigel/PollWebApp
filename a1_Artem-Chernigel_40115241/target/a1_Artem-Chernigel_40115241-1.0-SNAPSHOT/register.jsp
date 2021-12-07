@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <title>Register</title>
 </head>
-<body>
+<body id="registerPage">
 <% if (request.getAttribute("registered") == null) {%>
 <form action="RegisterServlet" method="post">
     <div class="pollMessage">
@@ -25,6 +25,9 @@
             <button type="submit" id="submitRegister">
                 Register
             </button>
+            <p name="errorRegister" id="errorRegister">
+                <%=request.getAttribute("error") == null ? "" : request.getAttribute("error")%>
+            </p>
         </div>
     </div>
 </form>
@@ -34,7 +37,6 @@
         <p>
             Thank you for registering your account with us! <br/>
             We just sent you a link to your email to verify your account! <br/>
-            Meanwhile, you can access the home page using the button below :) <br/>
         </p>
         <button onclick="window.location.href = 'index.jsp'">
             Home

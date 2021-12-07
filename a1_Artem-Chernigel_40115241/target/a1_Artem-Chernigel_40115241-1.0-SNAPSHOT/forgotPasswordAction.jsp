@@ -9,41 +9,44 @@
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <title>Forgot Password</title>
 </head>
-<body>
+<body id="forgotPasswordPage">
 <% if (request.getAttribute("tokenEmailed") == null) {%>
 <div class="pollMessage">
-    <div class="innerDiv">
+    <div class="forgotPasswordInnerDiv">
         <form action="ForgotPasswordServlet" method="post">
             <label for="userIDForgotPassword" id="userIDForgotPasswordLabel">User ID:</label><br/>
             <input type="text" id="userIDForgotPassword" name="userIDForgotPassword"><br/>
             <button type="submit" id="submitForgotPassword">
                 Send me the link!
             </button>
+            <p name="errorForgotPassword" id="errorForgotPassword">
+                <%=request.getAttribute("error") == null ? "" : request.getAttribute("error")%>
+            </p>
         </form>
     </div>
 </div>
 <% } else if ((Boolean) request.getAttribute("tokenEmailed")) {%>
 <div class="pollMessage">
-    <div class="innerDiv">
+    <div class="forgotPasswordInnerDiv">
         <p>
             Done! We just sent you the email to restore your password! <br/>
-            Meanwhile, if you would like return to the home page, please use the button below: <br/>
         </p>
         <button onclick="window.location.href = 'index.jsp'">
             Home
         </button>
+        <br/><br/><br/>
     </div>
 </div>
 <% } else {%>
 <div class="pollMessage">
-    <div class="innerDiv">
+    <div class="forgotPasswordInnerDiv">
         <p>
             Oops... Something went completely wrong... Please try to restore the password again! <br/>
-            Meanwhile, if you would like return to the home page, please use the button below: <br/>
         </p>
         <button onclick="window.location.href = 'index.jsp'">
             Home
         </button>
+        <br/><br/><br/>
     </div>
 </div>
 <% } %>

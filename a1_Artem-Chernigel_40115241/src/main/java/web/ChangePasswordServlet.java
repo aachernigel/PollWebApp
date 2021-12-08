@@ -4,7 +4,7 @@ import PollManagerLib.PluginManager;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import userManagement.Encryptor;
-import userManagement.PollPluginFactory;
+import PollManagerLib.PollPluginFactory;
 import userManagement.PollUserManager;
 import userManagement.User;
 

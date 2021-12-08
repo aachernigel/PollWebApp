@@ -1,8 +1,6 @@
 package web;
 
-import PollManagerLib.Choice;
-import PollManagerLib.PollException;
-import PollManagerLib.PollWrapper;
+import PollManagerLib.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;

@@ -1,6 +1,9 @@
 package web;
 
 import PollManagerLib.PluginManager;
+import PollManagerLib.PollPluginFactory;
+import emailManagement.EmailGateway;
+import emailManagement.EmailType;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import userManagement.*;
@@ -9,9 +12,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 
 @WebServlet(name = "RegisterServlet", value = "/RegisterServlet")
@@ -41,6 +41,9 @@ public class RegisterServlet extends HttpServlet {
                     if(u.get("userID").equals(request.getParameter("userIDRegister"))){
                         request.setAttribute("error", "Such userID already exists!");
                         found = true;
+                    } else if(u.get("emailAddress").equals(request.getParameter("emailAddressRegister"))){
+                        request.setAttribute("error", "Such email address already has an account!");
+                        found = true;
                     }
                 }
             } catch (IOException | ParseException e){
@@ -49,16 +52,13 @@ public class RegisterServlet extends HttpServlet {
                 found = true;
             }
             if(!found){
-                String hashedPassword = "";
-                hashedPassword = Encryptor.getEncryption(request.getParameter("passwordRegister"));
                 User user = new User(
                         request.getParameter("userIDRegister"),
                         request.getParameter("firstNameRegister"),
                         request.getParameter("lastNameRegister"),
                         request.getParameter("emailAddressRegister"),
-                        hashedPassword
+                        request.getParameter("passwordRegister")
                 );
-                user.generateVerificationToken();
                 PollPluginFactory pollPluginFactory = new PollPluginFactory();
                 PluginManager userManager = pollPluginFactory.getPlugin(PollUserManager.class);
                 PluginManager emailManager = pollPluginFactory.getPlugin(EmailGateway.class);

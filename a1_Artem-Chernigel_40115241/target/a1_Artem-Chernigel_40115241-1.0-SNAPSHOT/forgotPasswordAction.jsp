@@ -9,6 +9,9 @@
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <title>Forgot Password</title>
 </head>
+<div class="loginDiv">
+    <button onclick="window.location.href='index.jsp'">Home</button>
+</div>
 <body id="forgotPasswordPage">
 <% if (request.getAttribute("tokenEmailed") == null) {%>
 <div class="pollMessage">
@@ -30,23 +33,19 @@
     <div class="forgotPasswordInnerDiv">
         <p>
             Done! We just sent you the email to restore your password! <br/>
+            Go ahead and check it out! <br/>
         </p>
-        <button onclick="window.location.href = 'index.jsp'">
-            Home
-        </button>
-        <br/><br/><br/>
+        <br/>
     </div>
 </div>
 <% } else {%>
 <div class="pollMessage">
     <div class="forgotPasswordInnerDiv">
         <p>
-            Oops... Something went completely wrong... Please try to restore the password again! <br/>
+            Oops... Something went completely wrong... <br/>
+            Please try to restore the password again! <br/>
         </p>
-        <button onclick="window.location.href = 'index.jsp'">
-            Home
-        </button>
-        <br/><br/><br/>
+        <br/>
     </div>
 </div>
 <% } %>

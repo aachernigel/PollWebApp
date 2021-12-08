@@ -1,5 +1,6 @@
 package web;
 
+import PollManagerLib.DBConnection;
 import PollManagerLib.PollWrapper;
 
 import javax.servlet.*;

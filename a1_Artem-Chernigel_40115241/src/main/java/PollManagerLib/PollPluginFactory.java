@@ -1,6 +1,7 @@
-package userManagement;
+package PollManagerLib;
 
-import PollManagerLib.PluginManager;
+import emailManagement.EmailGateway;
+import userManagement.PollUserManager;
 
 public class PollPluginFactory {
     // Available Plugins:

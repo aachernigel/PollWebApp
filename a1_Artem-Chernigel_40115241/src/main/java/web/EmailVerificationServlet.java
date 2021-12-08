@@ -1,8 +1,8 @@
 package web;
 
 import PollManagerLib.PluginManager;
-import userManagement.EmailType;
-import userManagement.PollPluginFactory;
+import emailManagement.EmailType;
+import PollManagerLib.PollPluginFactory;
 import userManagement.PollUserManager;
 
 import javax.servlet.*;
@@ -18,7 +18,7 @@ public class EmailVerificationServlet extends HttpServlet {
         String userID = request.getParameter("userID");
         PollPluginFactory pollPluginFactory = new PollPluginFactory();
         PluginManager userManager = pollPluginFactory.getPlugin(PollUserManager.class);
-        request.setAttribute("accountIsVerified", userManager.getUserManagement().emailVerification(userID, verificationToken, EmailType.ACCOUNT_CREATION, request));
+        request.setAttribute("accountIsVerified", userManager.getUserManagement().emailVerification(userID, verificationToken, EmailType.ACCOUNT_CREATION, null));
         request.getRequestDispatcher("emailVerificationMessage.jsp").forward(request, response);
     }
 

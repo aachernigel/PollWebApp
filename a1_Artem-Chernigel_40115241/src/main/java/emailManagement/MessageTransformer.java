@@ -1,9 +1,8 @@
-package userManagement;
+package emailManagement;
+
+import userManagement.User;
 
 import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.util.Properties;
 
 public class MessageTransformer {
     public static void transformMessage(Message message, User user, EmailType type) throws MessagingException {

@@ -7,6 +7,9 @@
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <title>Register</title>
 </head>
+<div class="loginDiv">
+    <button onclick="window.location.href='index.jsp'">Home</button>
+</div>
 <body id="registerPage">
 <% if (request.getAttribute("registered") == null) {%>
 <form action="RegisterServlet" method="post">

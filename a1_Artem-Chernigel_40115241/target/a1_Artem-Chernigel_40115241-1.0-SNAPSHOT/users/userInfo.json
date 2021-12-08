@@ -6,8 +6,8 @@
         "password": "52c88bca7c5b3ab3e7ed8901ea1bc83f",
         "verificationToken": "6663023629",
         "verified": "true",
-        "changePasswordToken": "",
         "active": "true",
+        "changePasswordToken": "",
         "userID": "rockeySW"
     },
     {
@@ -17,8 +17,8 @@
         "password": "d8578edf8458ce06fbc5bb76a58c5ca4",
         "verificationToken": "5079060283",
         "verified": "true",
-        "changePasswordToken": "",
         "active": "true",
+        "changePasswordToken": "",
         "userID": "mcNeils"
     },
     {
@@ -28,19 +28,19 @@
         "password": "28719ff71216fa1731fc97cafc526a09",
         "verificationToken": "9444868182",
         "verified": "true",
-        "changePasswordToken": "3823720938",
         "active": "true",
+        "changePasswordToken": "3823720938",
         "userID": "joe123"
     },
     {
         "firstName": "Artem",
         "lastName": "Chernigel",
         "emailAddress": "aachernigel@gmail.com",
-        "password": "c6aba89e2d707dc73ebf4747b4bb54f4",
-        "verificationToken": "6974718667",
+        "password": "28719ff71216fa1731fc97cafc526a09",
+        "verificationToken": "5987204559",
         "verified": "true",
-        "changePasswordToken": "6454802637",
         "active": "true",
+        "changePasswordToken": "6583415711",
         "userID": "aachernigel"
     }
 ]}

@@ -70,7 +70,7 @@ public class LogInServlet extends HttpServlet {
                 } else if(!verified) {
                     request.setAttribute("error", "Please verify your account first!");
                 } else if(!active) {
-                    request.setAttribute("error", "Please change your password first with the token provided previously!");
+                    request.setAttribute("error", "Please restore your password first!");
                 }
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }

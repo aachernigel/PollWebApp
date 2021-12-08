@@ -24,7 +24,7 @@
         <p>
             Thank you for following the security procedure! <br/>
             We created a temporary password just for you:
-            <%= request.getAttribute("password") %> <br/>
+            <b><%= request.getAttribute("password") %><b/> <br/>
         </p>
         <button onclick="window.location.href = 'changePassword.jsp'">
             Change Password

@@ -1,4 +1,4 @@
-package userManagement;
+package emailManagement;
 
 public enum EmailType {
     ACCOUNT_CREATION,

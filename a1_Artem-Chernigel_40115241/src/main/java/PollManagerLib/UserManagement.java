@@ -1,9 +1,7 @@
 package PollManagerLib;
 
-import userManagement.EmailType;
+import emailManagement.EmailType;
 import userManagement.User;
-
-import javax.servlet.http.HttpServletRequest;
 
 public interface UserManagement {
 
@@ -11,7 +9,7 @@ public interface UserManagement {
 
     boolean forgotPassword(User user);
 
-    boolean emailVerification(String userID, String token, EmailType type, HttpServletRequest request);
+    boolean emailVerification(String userID, String token, EmailType type, String temporaryPassword);
 
     boolean changePassword(User user);
 

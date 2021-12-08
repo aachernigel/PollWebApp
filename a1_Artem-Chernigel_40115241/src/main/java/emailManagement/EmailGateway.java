@@ -1,6 +1,7 @@
-package userManagement;
+package emailManagement;
 
 import PollManagerLib.EmailManagement;
+import userManagement.User;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

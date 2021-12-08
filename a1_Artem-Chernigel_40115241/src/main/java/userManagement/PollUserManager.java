@@ -1,21 +1,15 @@
 package userManagement;
 
-import PollManagerLib.PluginManager;
 import PollManagerLib.UserManagement;
+import emailManagement.EmailType;
 import org.json.simple.JSONArray;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import web.LogInServlet;
-
-import javax.servlet.http.HttpServletRequest;
 
 public class PollUserManager implements UserManagement {
     private final static int TEMPORARY_PASSWORD_LENGTH = 13;
@@ -29,6 +23,7 @@ public class PollUserManager implements UserManagement {
                     return false;
                 }
             }
+            user.generateVerificationToken();
 
             org.json.JSONObject resultJson = new org.json.JSONObject();
             org.json.JSONArray arrOfUsers = new org.json.JSONArray();
@@ -44,7 +39,7 @@ public class PollUserManager implements UserManagement {
             newUser.put("firstName", user.getFirstName());
             newUser.put("lastName", user.getLastName());
             newUser.put("emailAddress", user.getEmailAddress());
-            newUser.put("password", user.getPassword());
+            newUser.put("password", Encryptor.getEncryption(user.getPassword()));
             newUser.put("verificationToken", user.getVerificationToken());
             newUser.put("verified", "false");
             newUser.put("active", "false");
@@ -99,9 +94,8 @@ public class PollUserManager implements UserManagement {
     }
 
     @Override
-    public boolean emailVerification(String userID, String token, EmailType type, HttpServletRequest request) {
+    public boolean emailVerification(String userID, String token, EmailType type, String temporaryPassword) {
         boolean verified = false;
-        String userPassword = "";
         try {
             LinkedList<JSONObject> users = PollUserManager.getUsers("C:\\Users\\Admin\\IdeaProjects\\PollWebApp\\a1_Artem-Chernigel_40115241\\src\\main\\webapp\\users\\userInfo.json");
             for (JSONObject u : users) {
@@ -125,7 +119,7 @@ public class PollUserManager implements UserManagement {
                 org.json.JSONObject userObj = setUserValues(u);
                 userObj.put("changePasswordToken", u.get("changePasswordToken"));
                 if (type.equals(EmailType.ACCOUNT_CREATION)) {
-                    if (u.get("userID").equals(userID) && verified) {
+                    if (u.get("userID").equals(userID)) {
                         userObj.put("verified", "true");
                         userObj.put("active", "true");
                     } else {
@@ -135,15 +129,11 @@ public class PollUserManager implements UserManagement {
                 } else if (type.equals(EmailType.FORGOT_PASSWORD)) {
                     userObj.put("verified", u.get("verified"));
                     if (u.get("userID").equals(userID)) {
-                        userPassword = createTemporaryPassword();
-
-                        String hash = Encryptor.getEncryption(userPassword);
+                        String hash = Encryptor.getEncryption(temporaryPassword);
 
                         userObj.put("active", "true");
                         userObj.remove("password");
                         userObj.put("password", hash);
-
-                        request.setAttribute("password", userPassword);
                     } else {
                         userObj.put("active", u.get("active"));
                     }
@@ -214,7 +204,7 @@ public class PollUserManager implements UserManagement {
         return userObj;
     }
 
-    private String createTemporaryPassword() {
+    public static String createTemporaryPassword() {
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_!";
         String temporaryPassword = "";
         int randomIndex;

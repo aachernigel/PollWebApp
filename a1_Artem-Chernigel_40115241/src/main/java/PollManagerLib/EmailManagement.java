@@ -1,6 +1,6 @@
 package PollManagerLib;
 
-import userManagement.EmailType;
+import emailManagement.EmailType;
 import userManagement.User;
 
 public interface EmailManagement {

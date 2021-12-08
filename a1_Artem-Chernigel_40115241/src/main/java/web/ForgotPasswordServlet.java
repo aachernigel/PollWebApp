@@ -1,7 +1,9 @@
 package web;
 
 import PollManagerLib.PluginManager;
-import PollManagerLib.PollManager;
+import PollManagerLib.PollPluginFactory;
+import emailManagement.EmailGateway;
+import emailManagement.EmailType;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import userManagement.*;
@@ -18,10 +20,12 @@ public class ForgotPasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userID = request.getParameter("userID");
+        String temporaryPassword = PollUserManager.createTemporaryPassword();
         String changePasswordToken = request.getParameter("changePasswordToken");
         PollPluginFactory pollPluginFactory = new PollPluginFactory();
         PluginManager userManager = pollPluginFactory.getPlugin(PollUserManager.class);
-        userManager.getUserManagement().emailVerification(userID, changePasswordToken, EmailType.FORGOT_PASSWORD, request);
+        request.setAttribute("password", temporaryPassword);
+        userManager.getUserManagement().emailVerification(userID, changePasswordToken, EmailType.FORGOT_PASSWORD, temporaryPassword);
         request.getRequestDispatcher("forgotVerificationMessage.jsp").forward(request, response);
     }
 

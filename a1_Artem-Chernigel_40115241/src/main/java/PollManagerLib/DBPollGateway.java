@@ -1,8 +1,4 @@
-package web;
-
-import PollManagerLib.PollManager;
-import PollManagerLib.PollStatus;
-import PollManagerLib.PollWrapper;
+package PollManagerLib;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

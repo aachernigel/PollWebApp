@@ -31,7 +31,7 @@
 <div class="pollMessage">
     <div class="forgotPasswordInnerDiv">
         <p>
-            Done! You successfully changed your password :) <br/>
+            Done! You successfully changed your password. <br/>
             You can go to the home page using the button below!
         </p>
         <button type="submit" onclick="window.location.href='index.jsp'">

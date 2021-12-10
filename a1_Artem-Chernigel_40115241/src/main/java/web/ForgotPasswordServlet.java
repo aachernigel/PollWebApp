@@ -48,7 +48,9 @@ public class ForgotPasswordServlet extends HttpServlet {
                         user.setChangePasswordToken((String) u.get("changePasswordToken"));
                     }
                 }
-                if (!user.getChangePasswordToken().equals("")) {
+                if(user == null){
+                    request.setAttribute("error", "Such User ID does not exist!");
+                } else if (!user.getChangePasswordToken().equals("")) {
                     request.setAttribute("error", "Sorry, you already restored your password once!");
                 } else {
                     PollPluginFactory pollPluginFactory = new PollPluginFactory();

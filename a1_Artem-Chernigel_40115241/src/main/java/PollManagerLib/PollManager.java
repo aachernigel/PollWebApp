@@ -104,7 +104,6 @@ public class PollManager {
     }
 
     private void generateID(){
-        // Can we assume that I can use database to check the ID against it?
         String alphabet = "ABCDEFGHJKMNPQRSTVWXYZ";
         int randomIndex;
         this.pollID = "";
@@ -121,7 +120,6 @@ public class PollManager {
         this.pin = pin;
     }
 
-    // Can a user update/release and so on the poll that was not created by him?
     public void CreatePoll(String name, String question, Choice[] choices) throws PollException {
         if (this.status == null || this.status == PollStatus.RELEASED) {
             this.status = PollStatus.CREATED;

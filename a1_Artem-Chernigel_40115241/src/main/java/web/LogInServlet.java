@@ -11,7 +11,6 @@ import javax.servlet.annotation.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 
 @WebServlet(name = "LogInServlet", value = "/LogInServlet")
@@ -20,8 +19,6 @@ import java.util.LinkedList;
 //      qwerty
 //      123
 public class LogInServlet extends HttpServlet {
-    protected static String DECRYPTION_ALGORITHM = "MD5";
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getSession().setAttribute("userID", null);
@@ -82,12 +79,4 @@ public class LogInServlet extends HttpServlet {
         }
     }
 
-    public static String convertByteArrayToHexString(byte[] arrayBytes) {
-        StringBuffer stringBuffer = new StringBuffer();
-        for (int i = 0; i < arrayBytes.length; i++) {
-            stringBuffer.append(Integer.toString((arrayBytes[i] & 0xff) + 0x100, 16)
-                    .substring(1));
-        }
-        return stringBuffer.toString();
-    }
 }

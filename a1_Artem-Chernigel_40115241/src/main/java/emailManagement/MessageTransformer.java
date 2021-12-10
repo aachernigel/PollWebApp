@@ -12,7 +12,7 @@ public class MessageTransformer {
                     "Hey, " + user.getFirstName() + " " + user.getLastName() + "!\n" +
                             "\tThank you so much for creating your account on our website! For security purposes, " +
                             "we would like to verify your email account." +
-                            "\nPlease click on the link below in order to verify:\n" +
+                            "\n\tPlease click on the link below in order to verify:\n" +
                             "http://localhost:8978/a1_Artem_Chernigel_40115241_war_exploded/EmailVerificationServlet?userID="
                             + user.getUserID() + "&verificationToken=" + user.getVerificationToken()
             );

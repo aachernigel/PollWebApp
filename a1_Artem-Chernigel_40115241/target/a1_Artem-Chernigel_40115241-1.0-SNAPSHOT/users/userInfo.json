@@ -31,16 +31,5 @@
         "active": "true",
         "changePasswordToken": "3823720938",
         "userID": "joe123"
-    },
-    {
-        "firstName": "Artem",
-        "lastName": "Chernigel",
-        "emailAddress": "aachernigel@gmail.com",
-        "password": "28719ff71216fa1731fc97cafc526a09",
-        "verificationToken": "5987204559",
-        "verified": "true",
-        "active": "true",
-        "changePasswordToken": "6583415711",
-        "userID": "aachernigel"
     }
 ]}

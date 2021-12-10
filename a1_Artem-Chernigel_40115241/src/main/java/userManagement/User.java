@@ -1,6 +1,5 @@
 package userManagement;
 
-
 public class User {
     private static final int TOKEN_LENGTH = 10;
 

@@ -1,5 +1,5 @@
 <%@ page import="PollManagerLib.*" %>
-<%@ page import="web.DBPollGateway" %>
+<%@ page import="PollManagerLib.DBPollGateway" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">

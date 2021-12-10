@@ -43,7 +43,7 @@ public class ChangePasswordServlet extends HttpServlet {
                             verified = true;
                             user = new User(userID,
                                     (String) u.get("firstName"), (String) u.get("lastName"),
-                                    (String) u.get("emailAddress"), Encryptor.getEncryption(newPassword));
+                                    (String) u.get("emailAddress"), newPassword);
                         }
                     }
                 }
@@ -52,8 +52,8 @@ public class ChangePasswordServlet extends HttpServlet {
                 } else{
                     PollPluginFactory pollPluginFactory = new PollPluginFactory();
                     PluginManager userManager = pollPluginFactory.getPlugin(PollUserManager.class);
-                    userManager.getUserManagement().changePassword(user);
-                    request.setAttribute("passwordChanged", true);
+                    boolean passwordChanged = userManager.getUserManagement().changePassword(user);
+                    request.setAttribute("passwordChanged", passwordChanged);
                 }
             } catch (IOException | ParseException e){
                 System.err.println(e);

@@ -159,6 +159,7 @@ public class PollUserManager implements UserManagement {
             LinkedList<JSONObject> users = getUsers("C:\\Users\\Admin\\IdeaProjects\\PollWebApp\\a1_Artem-Chernigel_40115241\\src\\main\\webapp\\users\\userInfo.json");
             org.json.JSONObject resultJson = new org.json.JSONObject();
             org.json.JSONArray arrOfUsers = new org.json.JSONArray();
+            user.setPassword(Encryptor.getEncryption(user.getPassword()));
             for (JSONObject u : users) {
                 org.json.JSONObject userObj = setUserValues(u);
                 userObj.put("verified", u.get("verified"));

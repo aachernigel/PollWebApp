@@ -1,0 +1,42 @@
+title Sign Up
+autoactivation on
+activate index.jsp
+index.jsp->register.jsp:Access Register functionality\nby clicking on the button 
+deactivate index.jsp
+register.jsp->RegisterServlet:Pass User information\nthrough post request
+deactivate register.jsp
+
+RegisterServlet->User:Create the User\nwith passed data
+PollPluginFactory->PluginManager:Get userManagement Plugin
+deactivate User
+autoactivation off
+activate PollPluginFactory
+RegisterServlet->PollPluginFactory:Create Plugin Factory
+PluginManager->PollUserManager:Call Sign Up method\nof  the userManagement
+activate PollUserManager
+activate Encryptor
+PollUserManager->Encryptor:Encrypt the password\nof the User
+activate PollUserManager
+PollUserManager->PollUserManager:Write the User data\nto the userInfo file
+deactivate Encryptor
+deactivate PollUserManager
+PollPluginFactory->PluginManager:Get emailManagement Plugin
+autoactivation on
+deactivate PollPluginFactory
+PluginManager->EmailGateway:Call Send Email method\nof the emailManagement
+EmailGateway->MessageTransformer:Pass ACCOUNT_CREATION EmailType\nalong with the User and the Message to\nbe rendered
+deactivate RegisterServlet
+deactivate PluginManager
+MessageTransformer->MessageTransformer:Render the message\naccording to the Emailtype
+EmailGateway->EmailGateway:Send the Email using\nthe rendered Message
+deactivate MessageTransformer
+activate RegisterServlet
+autoactivation off
+PollUserManager->RegisterServlet:Return boolean that indicates if\nthe User was registered successfully
+deactivate MessageTransformer
+deactivate PollUserManager
+deactivate EmailGateway
+EmailGateway->RegisterServlet:Return boolean that indicates if\nthe Email was sent successfully 
+deactivate EmailGateway
+activate register.jsp
+RegisterServlet->register.jsp:Modify the View according\nto the boolean values\nreturned from the methods

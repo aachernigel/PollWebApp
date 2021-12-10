@@ -6,22 +6,30 @@ import userManagement.User;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class EmailGateway implements EmailManagement {
     @Override
     public boolean sendEmail(User user, EmailType emailType) {
         String recipient = user.getEmailAddress();
-        String sender = "ttayadamson@gmail.com";
-        String password = "tayloradamson12345";
-
-        System.out.println("Sending email from " + sender + " to " + recipient);
-
         Properties properties = new Properties();
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "587");
+        InputStream inputStream;
+        try {
+            inputStream = new FileInputStream("C:\\Users\\Admin\\IdeaProjects\\PollWebApp\\a1_Artem-Chernigel_40115241\\src\\main\\resources\\config.properties");
+            properties.load(inputStream);
+        } catch (FileNotFoundException e) {
+            System.err.println(e);
+            return false;
+        } catch (IOException e) {
+            System.err.println(e);
+            return false;
+        }
+        String sender = properties.getProperty("email_sender_login");
+        String password = properties.getProperty("email_sender_password");
 
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override

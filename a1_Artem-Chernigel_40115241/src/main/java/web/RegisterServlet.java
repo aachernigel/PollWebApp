@@ -35,23 +35,23 @@ public class RegisterServlet extends HttpServlet {
             request.setAttribute("error", "Password cannot be empty!");
         } else {
             boolean found = false;
-            try{
+            try {
                 LinkedList<JSONObject> users = PollUserManager.getUsers("C:\\Users\\Admin\\IdeaProjects\\PollWebApp\\a1_Artem-Chernigel_40115241\\src\\main\\webapp\\users\\userInfo.json");
                 for (JSONObject u : users) {
-                    if(u.get("userID").equals(request.getParameter("userIDRegister"))){
+                    if (u.get("userID").equals(request.getParameter("userIDRegister"))) {
                         request.setAttribute("error", "Such userID already exists!");
                         found = true;
-                    } else if(u.get("emailAddress").equals(request.getParameter("emailAddressRegister"))){
+                    } else if (u.get("emailAddress").equals(request.getParameter("emailAddressRegister"))) {
                         request.setAttribute("error", "Such email address already has an account!");
                         found = true;
                     }
                 }
-            } catch (IOException | ParseException e){
+            } catch (IOException | ParseException e) {
                 System.err.println(e);
                 request.setAttribute("error", "Oops... Something went completely wrong!");
                 found = true;
             }
-            if(!found){
+            if (!found) {
                 User user = new User(
                         request.getParameter("userIDRegister"),
                         request.getParameter("firstNameRegister"),
@@ -62,9 +62,12 @@ public class RegisterServlet extends HttpServlet {
                 PollPluginFactory pollPluginFactory = new PollPluginFactory();
                 PluginManager userManager = pollPluginFactory.getPlugin(PollUserManager.class);
                 PluginManager emailManager = pollPluginFactory.getPlugin(EmailGateway.class);
-                userManager.getUserManagement().signUp(user);
-                emailManager.getEmailManagement().sendEmail(user, EmailType.ACCOUNT_CREATION);
-                request.setAttribute("registered", "true");
+                boolean registered = userManager.getUserManagement().signUp(user) &&
+                        emailManager.getEmailManagement().sendEmail(user, EmailType.ACCOUNT_CREATION);
+                if (registered)
+                    request.setAttribute("registered", "true");
+                else
+                    request.setAttribute("error", "Oops... Something went completely wrong!");
             }
         }
         request.getRequestDispatcher("register.jsp").forward(request, response);
